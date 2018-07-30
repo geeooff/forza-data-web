@@ -134,22 +134,22 @@ namespace ForzaData.Console
 		protected virtual ConsoleColor GetCurrentEngineRpmValueColor(float currentEngineRpm, float engineIdleRpm, float engineMaxRpm)
 		{
 			if (engineIdleRpm == 0f || engineMaxRpm == 0f)
-				return DefaultValueColor;
+				return ValueColor;
 
-			float mediumRpmBound = (engineMaxRpm * DefaultEngineMediumRpmPercent);
-			float highRpmBound = (engineMaxRpm * DefaultEngineHighRpmPercent);
+			float mediumRpmBound = (engineMaxRpm * EngineMediumRpmPercent);
+			float highRpmBound = (engineMaxRpm * EngineHighRpmPercent);
 
 			if (currentEngineRpm < mediumRpmBound)
 			{
-				return DefaultEngineLowRpmColor;
+				return EngineLowRpmColor;
 			}
 			else if (currentEngineRpm >= highRpmBound)
 			{
-				return DefaultEngineHighRpmColor;
+				return EngineHighRpmColor;
 			}
 			else
 			{
-				return DefaultEngineMediumRpmColor;
+				return EngineMediumRpmColor;
 			}
 		}
 
