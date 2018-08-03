@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ForzaData.Core
 {
-    public struct ForzaDataStruct
-    {
+	public struct ForzaDataStruct
+	{
 		// = 1 when race is on. = 0 when in menus/race stopped …
 		public int IsRaceOn;
 

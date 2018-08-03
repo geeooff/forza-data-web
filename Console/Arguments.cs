@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ForzaData.Console
 {
-    public class Arguments
-    {
+	public class Arguments
+	{
 		[PowArgs.Attributes.Argument("UDP local network port to bind")]
 		public int Port { get; set; } = 7777;
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ForzaData.Core
 {
-    internal class ForzaDataUnsubscriber : IDisposable
+	internal class ForzaDataUnsubscriber : IDisposable
 	{
 		private ICollection<IObserver<ForzaDataStruct>> _observers;
 		private IObserver<ForzaDataStruct> _observer;

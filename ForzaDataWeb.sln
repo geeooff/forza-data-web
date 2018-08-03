@@ -7,9 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForzaData.Web", "Receiver\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForzaData.Tests", "Tests\ForzaData.Tests.csproj", "{7A2718F7-7DA3-4015-85D2-E2244F71CE5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForzaData.Console", "Console\ForzaData.Console.csproj", "{5B142436-5225-4461-9CDD-04C885200230}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForzaData.Console", "Console\ForzaData.Console.csproj", "{5B142436-5225-4461-9CDD-04C885200230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForzaData.Core", "Core\ForzaData.Core.csproj", "{15424D1D-BB5E-417A-A8E0-4F97340B1ADC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForzaData.Core", "Core\ForzaData.Core.csproj", "{15424D1D-BB5E-417A-A8E0-4F97340B1ADC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9EDFB982-DFDF-4E51-9C77-0D34A23B0AF8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

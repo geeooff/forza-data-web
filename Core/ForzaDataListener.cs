@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ForzaData.Core
 {
-    public class ForzaDataListener : IDisposable, IObservable<ForzaDataStruct>
+	public class ForzaDataListener : IDisposable, IObservable<ForzaDataStruct>
 	{
 		private readonly UdpClient _udpClient;
 		private readonly ICollection<IObserver<ForzaDataStruct>> _observers;

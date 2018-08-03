@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ForzaData.Core
 {
-    public class ForzaDataReader
-    {
+	public class ForzaDataReader
+	{
 		public ForzaDataReader()
 		{
 
@@ -111,5 +111,5 @@ namespace ForzaData.Core
 
 			return output;
 		}
-    }
+	}
 }

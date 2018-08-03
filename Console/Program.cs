@@ -8,12 +8,12 @@ using ForzaData.Core;
 
 namespace ForzaData.Console
 {
-    class Program
-    {
+	class Program
+	{
 		private static Arguments _args;
 
 		static void Main(string[] args)
-        {
+		{
 			try
 			{
 				_args = PowArgs.Parser<Arguments>.Parse(args);
