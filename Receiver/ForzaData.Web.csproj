@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp2.2</TargetFramework>
+		<Version>0.3</Version>
+		<Authors>Geoffrey Vancoetsem</Authors>
+		<Company></Company>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
+		<Product>ForzaDataWeb</Product>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Core\ForzaData.Core.csproj" />
+	</ItemGroup>
+
+</Project>
