@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp2.1</TargetFramework>
+		<TargetFramework>netcoreapp2.2</TargetFramework>
 		<Version>0.2</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
