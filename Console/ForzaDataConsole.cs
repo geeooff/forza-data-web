@@ -61,6 +61,8 @@ namespace ForzaData.Console
 				System.Console.CursorLeft = 0;
 				System.Console.CursorVisible = false;
 
+				// TODO re-design console dashboard to support V2 data
+
 				System.Console.WriteLine("Race XXX Car XXXXXXXXXXX Class X Index XXX Drivetrain XXX Cylinders XX");
 				System.Console.WriteLine();
 				System.Console.WriteLine("Current XXXXX RPM");
@@ -79,34 +81,42 @@ namespace ForzaData.Console
 
 		protected virtual void UpdateUI(ForzaDataStruct data)
 		{
+			ForzaSledDataStruct sd = data.Sled;
+			ForzaCarDashDataStruct? cdd = data.CarDash;
+
 			lock (SyncRoot)
 			{
-				ConsoleWriteAt(5, 0, GetRaceIsOneValue(data.IsRaceOn), 3, GetRaceIsOneValueColor(data.IsRaceOn));
-				ConsoleWriteAt(13, 0, $"{data.CarOrdinal,11:##0}", 11);
-				ConsoleWriteAt(31, 0, "DCBASRPX"[data.CarClass].ToString(), 1);
-				ConsoleWriteAt(39, 0, $"{data.CarPerformanceIndex,3:##0}", 3);
-				ConsoleWriteAt(54, 0, GetDriveTrainValue(data.DrivetrainType), 3);
-				ConsoleWriteAt(68, 0, string.Format("{0:#0}", data.NumCylinders), 2);
+				ConsoleWriteAt(5, 0, GetRaceIsOneValue(sd.IsRaceOn), 3, GetRaceIsOneValueColor(sd.IsRaceOn));
+				ConsoleWriteAt(13, 0, $"{sd.CarOrdinal,11:##0}", 11);
+				ConsoleWriteAt(31, 0, "DCBASRPX"[sd.CarClass].ToString(), 1);
+				ConsoleWriteAt(39, 0, $"{sd.CarPerformanceIndex,3:##0}", 3);
+				ConsoleWriteAt(54, 0, GetDriveTrainValue(sd.DrivetrainType), 3);
+				ConsoleWriteAt(68, 0, string.Format("{0:#0}", sd.NumCylinders), 2);
 
-				ConsoleWriteAt(8, 2, $"{data.CurrentEngineRpm,5:####0}", 5, GetCurrentEngineRpmValueColor(data.CurrentEngineRpm, data.EngineIdleRpm, data.EngineMaxRpm));
-				ConsoleWriteAt(8, 3, $"{data.EngineIdleRpm,5:####0}", 5);
-				ConsoleWriteAt(8, 4, $"{data.EngineMaxRpm,5:####0}", 5);
+				ConsoleWriteAt(8, 2, $"{sd.CurrentEngineRpm,5:####0}", 5, GetCurrentEngineRpmValueColor(sd.CurrentEngineRpm, sd.EngineIdleRpm, sd.EngineMaxRpm));
+				ConsoleWriteAt(8, 3, $"{sd.EngineIdleRpm,5:####0}", 5);
+				ConsoleWriteAt(8, 4, $"{sd.EngineMaxRpm,5:####0}", 5);
 
-				ConsoleWriteAt(13, 7, $"{data.AccelerationX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 7, $"{data.AccelerationY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 7, $"{data.AccelerationZ,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 7, $"{sd.AccelerationX,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 7, $"{sd.AccelerationY,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 7, $"{sd.AccelerationZ,11:###0.000000}", 11);
 
-				ConsoleWriteAt(13, 8, $"{data.VelocityX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 8, $"{data.VelocityY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 8, $"{data.VelocityZ,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 8, $"{sd.VelocityX,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 8, $"{sd.VelocityY,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 8, $"{sd.VelocityZ,11:###0.000000}", 11);
 
-				ConsoleWriteAt(13, 11, $"{data.Yaw,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 11, $"{data.Pitch,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 11, $"{data.Roll,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 11, $"{sd.Yaw,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 11, $"{sd.Pitch,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 11, $"{sd.Roll,11:###0.000000}", 11);
 
-				ConsoleWriteAt(13, 12, $"{data.AngularVelocityX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 12, $"{data.AngularVelocityY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 12, $"{data.AngularVelocityZ,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 12, $"{sd.AngularVelocityX,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 12, $"{sd.AngularVelocityY,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 12, $"{sd.AngularVelocityZ,11:###0.000000}", 11);
+
+				if (cdd.HasValue)
+				{
+					// TODO update V2 data numbers
+				}
 			}
 		}
 
