@@ -17,11 +17,11 @@ namespace ForzaData.Core
 		private IPEndPoint _serverEndPoint;
 		private ForzaDataStruct? _lastData;
 
-		public ForzaDataListener(int port, IPAddress serverIpAddress)
+		public ForzaDataListener(int port, IPAddress serverIpAddress, ForzaDataVersion version)
 		{
 			_udpClient = new UdpClient(port);
 			_observers = new List<IObserver<ForzaDataStruct>>();
-			_reader = new ForzaDataReader();
+			_reader = ForzaDataReader.Create(version);
 
 			_serverEndPoint = new IPEndPoint(serverIpAddress, 0);
 			_lastData = null;
