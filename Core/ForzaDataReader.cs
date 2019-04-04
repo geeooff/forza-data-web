@@ -1,34 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ForzaData.Core
 {
 	public class ForzaDataReader
 	{
-		public static ForzaDataReader Create(ForzaDataVersion version)
-		{
-			if (version == ForzaDataVersion.Unknown)
-				throw new ArgumentException($"Forza data-out version must be known", nameof(version));
+		private const int SledDataPacketSize = 232;
+		private const int CarDashDataPacketSize = SledDataPacketSize + 79;
 
-			if (version != ForzaDataVersion.Sled || version != ForzaDataVersion.CarDash)
-				throw new NotSupportedException($"Forza data-out version \"{version}\" is not yet supported");
-
-
-			return new ForzaDataReader()
-			{
-				Version = version
-			};
-			
-		}
-
-		protected ForzaDataReader()
+		public ForzaDataReader()
 		{
 			
 		}
-
-		public ForzaDataVersion Version { get; private set; }
 
 		public bool TryRead(byte[] input, out ForzaDataStruct output)
 		{
@@ -39,35 +25,51 @@ namespace ForzaData.Core
 			}
 			catch
 			{
-				output = InitData();
+				output = new ForzaDataStruct()
+				{
+					Version = ForzaDataVersion.Unknown
+				};
 				return false;
 			}
 		}
 
-		private ForzaDataStruct InitData()
-		{
-			return new ForzaDataStruct
-			{
-				Version = Version
-			};
-		}
-
 		public ForzaDataStruct Read(byte[] input)
 		{
-			ForzaDataStruct output = InitData();
-
-			using (MemoryStream stream = new MemoryStream(input))
-			using (BinaryReader reader = new BinaryReader(stream))
+			ForzaDataStruct output = new ForzaDataStruct()
 			{
-				output.Sled = ReadSledData(reader);
-				
-				if (Version >= ForzaDataVersion.CarDash)
+				Version = ReadVersion(input)
+			};
+
+			if (output.Version != ForzaDataVersion.Unknown)
+			{
+				using (MemoryStream stream = new MemoryStream(input))
+				using (BinaryReader reader = new BinaryReader(stream))
 				{
-					output.CarDash = ReadCarDashData(reader);
+					output.Sled = ReadSledData(reader);
+
+					if (output.Version >= ForzaDataVersion.CarDash)
+					{
+						output.CarDash = ReadCarDashData(reader);
+					}
 				}
 			}
 
 			return output;
+		}
+
+		private ForzaDataVersion ReadVersion(byte[] input)
+		{
+			switch (input.Length)
+			{
+				case SledDataPacketSize:
+					return ForzaDataVersion.Sled;
+
+				case CarDashDataPacketSize:
+					return ForzaDataVersion.CarDash;
+
+				default:
+					return ForzaDataVersion.Unknown;
+			}
 		}
 
 		private ForzaSledDataStruct ReadSledData(BinaryReader reader)

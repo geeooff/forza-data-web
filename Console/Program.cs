@@ -36,7 +36,7 @@ namespace ForzaData.Console
 			var serverIpAddress = IPAddress.Parse(_args.ServerIpAddress);
 
 			using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource())
-			using (ForzaDataListener listener = new ForzaDataListener(_args.Port, serverIpAddress, _args.Version))
+			using (ForzaDataListener listener = new ForzaDataListener(_args.Port, serverIpAddress))
 			{
 				// cancellation provided by CTRL + C / CTRL + break
 				System.Console.CancelKeyPress += (sender, e) =>
