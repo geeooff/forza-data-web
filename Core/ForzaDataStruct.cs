@@ -10,7 +10,7 @@ namespace ForzaData.Core
 	public struct ForzaDataStruct
 	{
 		/// <summary>
-		/// Version number: 1 for V1, Sled data, 2 for V2, Sled + Car Dash, data
+		/// Protocol version
 		/// </summary>
 		public ForzaDataVersion Version;
 
@@ -23,5 +23,10 @@ namespace ForzaData.Core
 		/// Car dash data
 		/// </summary>
 		public ForzaCarDashDataStruct? CarDash;
+
+		/// <summary>
+		/// Horizon specific car dash data
+		/// </summary>
+		public byte[] HorizonCarDash;
 	}
 }

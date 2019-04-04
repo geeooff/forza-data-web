@@ -10,7 +10,7 @@ namespace ForzaData.Core
 	{
 		private const int SledPacketSize = 232;
 		private const int CarDashPacketSize = SledPacketSize + 79;
-		private const int HorizonCarDashPacketSize = CarDashPacketSize + 13;
+		private const int HorizonCarDashPacketSize = SledPacketSize + 92;
 
 		public ForzaDataReader()
 		{
@@ -46,17 +46,20 @@ namespace ForzaData.Core
 				using (MemoryStream stream = new MemoryStream(input))
 				using (BinaryReader reader = new BinaryReader(stream))
 				{
+					// common data
 					output.Sled = ReadSledData(reader);
 
-					if (output.Version >= ForzaDataVersion.CarDash)
+					switch (output.Version)
 					{
-						output.CarDash = ReadCarDashData(reader);
+						// forza motorsport 7 car dash data
+						case ForzaDataVersion.CarDash:
+							output.CarDash = ReadCarDashData(reader);
+							break;
 
-						// TODO parse horizon-specific data
-						//if (output.Version >= ForzaDataVersion.HorizonCarDash)
-						//{
-						//	output.Horizon = ReadHorizonData(reader);
-						//}
+						// undocumented forza horizon 4 car dash data
+						case ForzaDataVersion.HorizonCarDash:
+							output.HorizonCarDash = ReadHorizonCarDashData(reader);
+							break;
 					}
 				}
 			}
@@ -66,16 +69,13 @@ namespace ForzaData.Core
 
 		private ForzaDataVersion ReadVersion(byte[] input)
 		{
-			int length = input.Length;
-
-			// future-proof, if T10 appends data, but need a error-proof parser
-			return length >= HorizonCarDashPacketSize
-				? ForzaDataVersion.HorizonCarDash
-				: length >= CarDashPacketSize
-					? ForzaDataVersion.CarDash
-					: length >= SledPacketSize
-						? ForzaDataVersion.Sled
-						: ForzaDataVersion.Unknown;
+			switch (input.Length)
+			{
+				case SledPacketSize: return ForzaDataVersion.Sled;
+				case CarDashPacketSize: return ForzaDataVersion.CarDash;
+				case HorizonCarDashPacketSize: return ForzaDataVersion.HorizonCarDash;
+				default: return ForzaDataVersion.Unknown;
+			}
 		}
 
 		private ForzaSledDataStruct ReadSledData(BinaryReader reader)
@@ -197,6 +197,12 @@ namespace ForzaData.Core
 				NormalizedDrivingLine = reader.ReadSByte(),
 				NormalizedAIBrakeDifference = reader.ReadSByte()
 			};
+		}
+
+		private byte[] ReadHorizonCarDashData(BinaryReader reader)
+		{
+			int length = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
+			return reader.ReadBytes(length);
 		}
 	}
 }
