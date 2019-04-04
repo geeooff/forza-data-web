@@ -8,8 +8,9 @@ namespace ForzaData.Core
 {
 	public class ForzaDataReader
 	{
-		private const int SledDataPacketSize = 232;
-		private const int CarDashDataPacketSize = SledDataPacketSize + 79;
+		private const int SledPacketSize = 232;
+		private const int CarDashPacketSize = SledPacketSize + 79;
+		private const int HorizonCarDashPacketSize = CarDashPacketSize + 13;
 
 		public ForzaDataReader()
 		{
@@ -50,6 +51,12 @@ namespace ForzaData.Core
 					if (output.Version >= ForzaDataVersion.CarDash)
 					{
 						output.CarDash = ReadCarDashData(reader);
+
+						// TODO parse horizon-specific data
+						//if (output.Version >= ForzaDataVersion.HorizonCarDash)
+						//{
+						//	output.Horizon = ReadHorizonData(reader);
+						//}
 					}
 				}
 			}
@@ -59,17 +66,16 @@ namespace ForzaData.Core
 
 		private ForzaDataVersion ReadVersion(byte[] input)
 		{
-			switch (input.Length)
-			{
-				case SledDataPacketSize:
-					return ForzaDataVersion.Sled;
+			int length = input.Length;
 
-				case CarDashDataPacketSize:
-					return ForzaDataVersion.CarDash;
-
-				default:
-					return ForzaDataVersion.Unknown;
-			}
+			// future-proof, if T10 appends data, but need a error-proof parser
+			return length >= HorizonCarDashPacketSize
+				? ForzaDataVersion.HorizonCarDash
+				: length >= CarDashPacketSize
+					? ForzaDataVersion.CarDash
+					: length >= SledPacketSize
+						? ForzaDataVersion.Sled
+						: ForzaDataVersion.Unknown;
 		}
 
 		private ForzaSledDataStruct ReadSledData(BinaryReader reader)
