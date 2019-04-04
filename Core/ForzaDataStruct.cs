@@ -5,7 +5,7 @@ using System.Text;
 namespace ForzaData.Core
 {
 	/// <summary>
-	/// Forza Horizon 4 / Forza Motorsport 6 Data Out structure
+	/// Forza Horizon 4 / Forza Motorsport 7 Data Out structure
 	/// </summary>
 	public struct ForzaDataStruct
 	{
