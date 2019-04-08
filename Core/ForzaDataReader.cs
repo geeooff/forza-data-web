@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ForzaData.Core
 {
 	public class ForzaDataReader
 	{
+		private const int SledPacketSize = 232;
+		private const int CarDashPacketSize = SledPacketSize + 79;
+		private const int HorizonCarDashPacketSize = SledPacketSize + 92;
+
 		public ForzaDataReader()
 		{
-
+			
 		}
 
 		public bool TryRead(byte[] input, out ForzaDataStruct output)
@@ -21,95 +26,183 @@ namespace ForzaData.Core
 			}
 			catch
 			{
-				output = new ForzaDataStruct();
+				output = new ForzaDataStruct()
+				{
+					Version = ForzaDataVersion.Unknown
+				};
 				return false;
 			}
 		}
 
 		public ForzaDataStruct Read(byte[] input)
 		{
-			ForzaDataStruct output = new ForzaDataStruct();
-
-			using (MemoryStream stream = new MemoryStream(input))
-			using (BinaryReader reader = new BinaryReader(stream))
+			ForzaDataStruct output = new ForzaDataStruct()
 			{
-				output.IsRaceOn = reader.ReadInt32();
+				Version = ReadVersion(input)
+			};
 
-				output.TimestampMS = reader.ReadUInt32();
+			if (output.Version != ForzaDataVersion.Unknown)
+			{
+				using (MemoryStream stream = new MemoryStream(input))
+				using (BinaryReader reader = new BinaryReader(stream))
+				{
+					// common data
+					output.Sled = ReadSledData(reader);
 
-				output.EngineMaxRpm = reader.ReadSingle();
-				output.EngineIdleRpm = reader.ReadSingle();
-				output.CurrentEngineRpm = reader.ReadSingle();
+					switch (output.Version)
+					{
+						// forza motorsport 7 car dash data
+						case ForzaDataVersion.CarDash:
+							output.CarDash = ReadCarDashData(reader);
+							break;
 
-				output.AccelerationX = reader.ReadSingle();
-				output.AccelerationY = reader.ReadSingle();
-				output.AccelerationZ = reader.ReadSingle();
-
-				output.VelocityX = reader.ReadSingle();
-				output.VelocityY = reader.ReadSingle();
-				output.VelocityZ = reader.ReadSingle();
-
-				output.AngularVelocityX = reader.ReadSingle();
-				output.AngularVelocityY = reader.ReadSingle();
-				output.AngularVelocityZ = reader.ReadSingle();
-
-				output.Yaw = reader.ReadSingle();
-				output.Pitch = reader.ReadSingle();
-				output.Roll = reader.ReadSingle();
-
-				output.NormalizedSuspensionTravelFrontLeft = reader.ReadSingle();
-				output.NormalizedSuspensionTravelFrontRight = reader.ReadSingle();
-				output.NormalizedSuspensionTravelRearLeft = reader.ReadSingle();
-				output.NormalizedSuspensionTravelRearRight = reader.ReadSingle();
-
-				output.TireSlipRatioFrontLeft = reader.ReadSingle();
-				output.TireSlipRatioFrontRight = reader.ReadSingle();
-				output.TireSlipRatioRearLeft = reader.ReadSingle();
-				output.TireSlipRatioRearRight = reader.ReadSingle();
-
-				output.WheelRotationSpeedFrontLeft = reader.ReadSingle();
-				output.WheelRotationSpeedFrontRight = reader.ReadSingle();
-				output.WheelRotationSpeedRearLeft = reader.ReadSingle();
-				output.WheelRotationSpeedRearRight = reader.ReadSingle();
-
-				output.WheelOnRumbleStripFrontLeft = reader.ReadInt32();
-				output.WheelOnRumbleStripFrontRight = reader.ReadInt32();
-				output.WheelOnRumbleStripRearLeft = reader.ReadInt32();
-				output.WheelOnRumbleStripRearRight = reader.ReadInt32();
-
-				output.WheelInPuddleDepthFrontLeft = reader.ReadSingle();
-				output.WheelInPuddleDepthFrontRight = reader.ReadSingle();
-				output.WheelInPuddleDepthRearLeft = reader.ReadSingle();
-				output.WheelInPuddleDepthRearRight = reader.ReadSingle();
-
-				output.SurfaceRumbleFrontLeft = reader.ReadSingle();
-				output.SurfaceRumbleFrontRight = reader.ReadSingle();
-				output.SurfaceRumbleRearLeft = reader.ReadSingle();
-				output.SurfaceRumbleRearRight = reader.ReadSingle();
-
-				output.TireSlipAngleFrontLeft = reader.ReadSingle();
-				output.TireSlipAngleFrontRight = reader.ReadSingle();
-				output.TireSlipAngleRearLeft = reader.ReadSingle();
-				output.TireSlipAngleRearRight = reader.ReadSingle();
-
-				output.TireCombinedSlipFrontLeft = reader.ReadSingle();
-				output.TireCombinedSlipFrontRight = reader.ReadSingle();
-				output.TireCombinedSlipRearLeft = reader.ReadSingle();
-				output.TireCombinedSlipRearRight = reader.ReadSingle();
-
-				output.SuspensionTravelMetersFrontLeft = reader.ReadSingle();
-				output.SuspensionTravelMetersFrontRight = reader.ReadSingle();
-				output.SuspensionTravelMetersRearLeft = reader.ReadSingle();
-				output.SuspensionTravelMetersRearRight = reader.ReadSingle();
-
-				output.CarOrdinal = reader.ReadInt32();
-				output.CarClass = reader.ReadInt32();
-				output.CarPerformanceIndex = reader.ReadInt32();
-				output.DrivetrainType = reader.ReadInt32();
-				output.NumCylinders = reader.ReadInt32();
+						// undocumented forza horizon 4 car dash data
+						case ForzaDataVersion.HorizonCarDash:
+							output.HorizonCarDash = ReadHorizonCarDashData(reader);
+							break;
+					}
+				}
 			}
 
 			return output;
+		}
+
+		private ForzaDataVersion ReadVersion(byte[] input)
+		{
+			switch (input.Length)
+			{
+				case SledPacketSize: return ForzaDataVersion.Sled;
+				case CarDashPacketSize: return ForzaDataVersion.CarDash;
+				case HorizonCarDashPacketSize: return ForzaDataVersion.HorizonCarDash;
+				default: return ForzaDataVersion.Unknown;
+			}
+		}
+
+		private ForzaSledDataStruct ReadSledData(BinaryReader reader)
+		{
+			return new ForzaSledDataStruct
+			{
+				IsRaceOn = reader.ReadInt32(),
+
+				TimestampMS = reader.ReadUInt32(),
+
+				EngineMaxRpm = reader.ReadSingle(),
+				EngineIdleRpm = reader.ReadSingle(),
+				CurrentEngineRpm = reader.ReadSingle(),
+
+				AccelerationX = reader.ReadSingle(),
+				AccelerationY = reader.ReadSingle(),
+				AccelerationZ = reader.ReadSingle(),
+
+				VelocityX = reader.ReadSingle(),
+				VelocityY = reader.ReadSingle(),
+				VelocityZ = reader.ReadSingle(),
+
+				AngularVelocityX = reader.ReadSingle(),
+				AngularVelocityY = reader.ReadSingle(),
+				AngularVelocityZ = reader.ReadSingle(),
+
+				Yaw = reader.ReadSingle(),
+				Pitch = reader.ReadSingle(),
+				Roll = reader.ReadSingle(),
+
+				NormalizedSuspensionTravelFrontLeft = reader.ReadSingle(),
+				NormalizedSuspensionTravelFrontRight = reader.ReadSingle(),
+				NormalizedSuspensionTravelRearLeft = reader.ReadSingle(),
+				NormalizedSuspensionTravelRearRight = reader.ReadSingle(),
+
+				TireSlipRatioFrontLeft = reader.ReadSingle(),
+				TireSlipRatioFrontRight = reader.ReadSingle(),
+				TireSlipRatioRearLeft = reader.ReadSingle(),
+				TireSlipRatioRearRight = reader.ReadSingle(),
+
+				WheelRotationSpeedFrontLeft = reader.ReadSingle(),
+				WheelRotationSpeedFrontRight = reader.ReadSingle(),
+				WheelRotationSpeedRearLeft = reader.ReadSingle(),
+				WheelRotationSpeedRearRight = reader.ReadSingle(),
+
+				WheelOnRumbleStripFrontLeft = reader.ReadInt32(),
+				WheelOnRumbleStripFrontRight = reader.ReadInt32(),
+				WheelOnRumbleStripRearLeft = reader.ReadInt32(),
+				WheelOnRumbleStripRearRight = reader.ReadInt32(),
+
+				WheelInPuddleDepthFrontLeft = reader.ReadSingle(),
+				WheelInPuddleDepthFrontRight = reader.ReadSingle(),
+				WheelInPuddleDepthRearLeft = reader.ReadSingle(),
+				WheelInPuddleDepthRearRight = reader.ReadSingle(),
+
+				SurfaceRumbleFrontLeft = reader.ReadSingle(),
+				SurfaceRumbleFrontRight = reader.ReadSingle(),
+				SurfaceRumbleRearLeft = reader.ReadSingle(),
+				SurfaceRumbleRearRight = reader.ReadSingle(),
+
+				TireSlipAngleFrontLeft = reader.ReadSingle(),
+				TireSlipAngleFrontRight = reader.ReadSingle(),
+				TireSlipAngleRearLeft = reader.ReadSingle(),
+				TireSlipAngleRearRight = reader.ReadSingle(),
+
+				TireCombinedSlipFrontLeft = reader.ReadSingle(),
+				TireCombinedSlipFrontRight = reader.ReadSingle(),
+				TireCombinedSlipRearLeft = reader.ReadSingle(),
+				TireCombinedSlipRearRight = reader.ReadSingle(),
+
+				SuspensionTravelMetersFrontLeft = reader.ReadSingle(),
+				SuspensionTravelMetersFrontRight = reader.ReadSingle(),
+				SuspensionTravelMetersRearLeft = reader.ReadSingle(),
+				SuspensionTravelMetersRearRight = reader.ReadSingle(),
+
+				CarOrdinal = reader.ReadInt32(),
+				CarClass = reader.ReadInt32(),
+				CarPerformanceIndex = reader.ReadInt32(),
+				DrivetrainType = reader.ReadInt32(),
+				NumCylinders = reader.ReadInt32()
+			};
+		}
+
+		private ForzaCarDashDataStruct ReadCarDashData(BinaryReader reader)
+		{
+			return new ForzaCarDashDataStruct
+			{
+				PositionX = reader.ReadSingle(),
+				PositionY = reader.ReadSingle(),
+				PositionZ = reader.ReadSingle(),
+
+				Speed = reader.ReadSingle(),
+				Power = reader.ReadSingle(),
+				Torque = reader.ReadSingle(),
+
+				TireTempFrontLeft = reader.ReadSingle(),
+				TireTempFrontRight = reader.ReadSingle(),
+				TireTempRearLeft = reader.ReadSingle(),
+				TireTempRearRight = reader.ReadSingle(),
+
+				Boost = reader.ReadSingle(),
+				Fuel = reader.ReadSingle(),
+				DistanceTraveled = reader.ReadSingle(),
+				BestLap = reader.ReadSingle(),
+				LastLap = reader.ReadSingle(),
+				CurrentLap = reader.ReadSingle(),
+				CurrentRaceTime = reader.ReadSingle(),
+
+				LapNumber = reader.ReadUInt16(),
+				RacePosition = reader.ReadByte(),
+
+				Accel = reader.ReadByte(),
+				Brake = reader.ReadByte(),
+				Clutch = reader.ReadByte(),
+				HandBrake = reader.ReadByte(),
+				Gear = reader.ReadByte(),
+				Steer = reader.ReadSByte(),
+
+				NormalizedDrivingLine = reader.ReadSByte(),
+				NormalizedAIBrakeDifference = reader.ReadSByte()
+			};
+		}
+
+		private byte[] ReadHorizonCarDashData(BinaryReader reader)
+		{
+			int length = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
+			return reader.ReadBytes(length);
 		}
 	}
 }
