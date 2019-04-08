@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>netcoreapp2.2</TargetFramework>
-		<Version>0.3</Version>
+		<Version>0.4</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
 		<RepositoryType>git</RepositoryType>
