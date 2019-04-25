@@ -14,12 +14,12 @@ namespace ForzaData.Core
 			
 		}
 
-		public virtual void Subscribe(ForzaDataListener listener)
+		public void Subscribe(IObservable<ForzaDataStruct> listener)
 		{
 			_unsubscriber = listener.Subscribe(this);
 		}
 
-		public virtual void Unsubscribe()
+		public void Unsubscribe()
 		{
 			if (_unsubscriber != null)
 			{
@@ -29,6 +29,8 @@ namespace ForzaData.Core
 		}
 
 		public abstract void OnCompleted();
+
+		public abstract void OnError(ForzaDataException error);
 
 		public abstract void OnError(Exception error);
 
