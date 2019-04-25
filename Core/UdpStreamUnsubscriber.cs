@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ForzaData.Core
 {
-	internal class ForzaDataUnsubscriber : IDisposable
+	internal class UdpStreamUnsubscriber : IDisposable
 	{
-		private readonly ICollection<IObserver<ForzaDataStruct>> _observers;
-		private readonly IObserver<ForzaDataStruct> _observer;
+		private readonly ICollection<IObserver<byte[]>> _observers;
+		private readonly IObserver<byte[]> _observer;
 
-		internal ForzaDataUnsubscriber(ICollection<IObserver<ForzaDataStruct>> observers, IObserver<ForzaDataStruct> observer)
+		internal UdpStreamUnsubscriber(ICollection<IObserver<byte[]>> observers, IObserver<byte[]> observer)
 		{
 			_observers = observers;
 			_observer = observer;

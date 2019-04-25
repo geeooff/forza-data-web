@@ -5,16 +5,16 @@ using System.Text;
 
 namespace ForzaData.Core
 {
-	public abstract class ForzaDataObserver : IObserver<ForzaDataStruct>
+	public abstract class UdpStreamObserver : IObserver<byte[]>
 	{
 		private IDisposable _unsubscriber;
 
-		public ForzaDataObserver()
+		public UdpStreamObserver()
 		{
 			
 		}
 
-		public void Subscribe(IObservable<ForzaDataStruct> listener)
+		public void Subscribe(IObservable<byte[]> listener)
 		{
 			_unsubscriber = listener.Subscribe(this);
 		}
@@ -30,10 +30,8 @@ namespace ForzaData.Core
 
 		public abstract void OnCompleted();
 
-		public abstract void OnError(ForzaDataException error);
-
 		public abstract void OnError(Exception error);
 
-		public abstract void OnNext(ForzaDataStruct value);
+		public abstract void OnNext(byte[] value);
 	}
 }
