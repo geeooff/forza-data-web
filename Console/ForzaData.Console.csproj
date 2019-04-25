@@ -3,12 +3,14 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>netcoreapp2.2</TargetFramework>
-		<Version>0.4</Version>
+		<Version>0.5</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
 		<Product>ForzaDataWeb</Product>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,6 +19,13 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Core\ForzaData.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>
