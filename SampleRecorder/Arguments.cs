@@ -14,6 +14,9 @@ namespace ForzaData.SampleRecorder
 		[PowArgs.Attributes.Argument("IP of Forza Motorsport 7 server (your console) to listen to", required: true)]
 		public string ServerIpAddress { get; set; }
 
+		[PowArgs.Attributes.Argument("Output file", required: true)]
+		public string Output { get; set; }
+
 		[PowArgs.Attributes.Argument("Show this program arguments help")]
 		public bool Help { get; set; } = false;
 	}

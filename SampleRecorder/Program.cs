@@ -1,5 +1,6 @@
 ﻿using ForzaData.Core;
 using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 
@@ -31,6 +32,13 @@ namespace ForzaData.SampleRecorder
 			}
 
 			var serverIpAddress = IPAddress.Parse(_args.ServerIpAddress);
+			var outputFile = new FileInfo(_args.Output);
+			
+			// output directory creation
+			if (!outputFile.Directory.Exists)
+			{
+				outputFile.Directory.Create();
+			}
 
 			using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource())
 			using (UdpStreamListener listener = new UdpStreamListener(_args.Port, serverIpAddress))
@@ -42,21 +50,41 @@ namespace ForzaData.SampleRecorder
 					cancellationTokenSource.Cancel();
 				};
 
-				// forza data observer
-				UdpStreamSampleRecorder sampleRecorder = new UdpStreamSampleRecorder();
-				sampleRecorder.Subscribe(listener);
-
-				try
+				// udp packet observer to output file
+				using (FileStream output = new FileStream(outputFile.FullName, FileMode.Create, FileAccess.Write))
+				using (UdpStreamSampleRecorder sampleRecorder = new UdpStreamSampleRecorder(output))
 				{
-					// forza data observable
-					listener.Listen(cancellationTokenSource.Token);
-				}
-				catch (OperationCanceledException)
-				{
-					// user cancellation requested
-				}
+					sampleRecorder.Subscribe(listener);
 
-				sampleRecorder.Unsubscribe();
+					Console.Out.WriteLine($"Listening to {serverIpAddress}...");
+
+					try
+					{
+						// forza data observable
+						listener.Listen(cancellationTokenSource.Token);
+					}
+					catch (OperationCanceledException)
+					{
+						// user cancellation requested
+					}
+
+					sampleRecorder.Unsubscribe();
+
+					Console.Out.Write("Listening stopped. ");
+
+					if (output.Position > 0L)
+						Console.Out.WriteLine($"{sampleRecorder.BytesRead:N0} bytes read, {sampleRecorder.BytesWritten:N0} bytes written");
+					else
+						Console.Out.WriteLine("Nothing was read.");
+				}
+			}
+
+			outputFile.Refresh();
+
+			// empty file deletion
+			if (outputFile.Length == 0L)
+			{
+				outputFile.Delete();
 			}
 		}
 	}
