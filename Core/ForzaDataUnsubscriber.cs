@@ -7,8 +7,8 @@ namespace ForzaData.Core
 {
 	internal class ForzaDataUnsubscriber : IDisposable
 	{
-		private ICollection<IObserver<ForzaDataStruct>> _observers;
-		private IObserver<ForzaDataStruct> _observer;
+		private readonly ICollection<IObserver<ForzaDataStruct>> _observers;
+		private readonly IObserver<ForzaDataStruct> _observer;
 
 		internal ForzaDataUnsubscriber(ICollection<IObserver<ForzaDataStruct>> observers, IObserver<ForzaDataStruct> observer)
 		{
