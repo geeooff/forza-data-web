@@ -19,7 +19,7 @@ namespace ForzaData.Console
 
 		public ForzaDataConsole()
 		{
-
+			InitializeUI();
 		}
 
 		public virtual ConsoleColor ValueColor { get; set; } = DefaultValueColor;
@@ -29,16 +29,15 @@ namespace ForzaData.Console
 		public virtual float EngineMediumRpmPercent { get; set; } = DefaultEngineMediumRpmPercent;
 		public virtual float EngineHighRpmPercent { get; set; } = DefaultEngineHighRpmPercent;
 
-		public override void Subscribe(ForzaDataListener listener)
-		{
-			base.Subscribe(listener);
-			InitializeUI();
-		}
-
 		public override void OnCompleted()
 		{
 			System.Console.Clear();
 			System.Console.Error.WriteLine("Listening completed");
+		}
+		public override void OnError(ForzaDataException error)
+		{
+			System.Console.Clear();
+			System.Console.Error.WriteLine(error);
 		}
 
 		public override void OnError(Exception error)
