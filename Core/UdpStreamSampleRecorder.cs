@@ -1,8 +1,7 @@
-﻿using ForzaData.Core;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 
-namespace ForzaData.SampleRecorder;
+namespace ForzaData.Core;
 
 public class UdpStreamSampleRecorder(Stream output) : UdpStreamObserver, IDisposable
 {
