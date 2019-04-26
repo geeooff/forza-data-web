@@ -12,6 +12,7 @@ namespace ForzaData.Core
 		private readonly UdpClient _udpClient;
 		private readonly ICollection<IObserver<byte[]>> _observers;
 
+		private bool _isDisposed = false;
 		private IPEndPoint _serverEndPoint;
 		private byte[] _lastData;
 
@@ -23,14 +24,23 @@ namespace ForzaData.Core
 			_lastData = null;
 		}
 
-		public void Close()
+		protected virtual void Dispose(bool isDisposing)
 		{
-			_udpClient.Close();
+			if (!_isDisposed)
+			{
+				if (isDisposing)
+				{
+					_udpClient.Dispose();
+				}
+
+				_lastData = null;
+				_isDisposed = true;
+			}
 		}
 
 		public void Dispose()
 		{
-			_udpClient.Dispose();
+			Dispose(true);
 		}
 
 		public IDisposable Subscribe(IObserver<byte[]> observer)
