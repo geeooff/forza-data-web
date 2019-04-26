@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace ForzaData.SampleRecorder
+namespace ForzaData.Core
 {
 	public class UdpStreamSampleRecorder : UdpStreamObserver, IDisposable
 	{
