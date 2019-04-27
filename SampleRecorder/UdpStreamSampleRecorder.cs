@@ -38,7 +38,7 @@ namespace ForzaData.SampleRecorder
 			long elapsed = _stopwatch.ElapsedTicks;
 			int length = value.Length;
 
-			if (_stopwatch.IsRunning)
+			if (!_stopwatch.IsRunning)
 			{
 				_stopwatch.Start();
 			}
