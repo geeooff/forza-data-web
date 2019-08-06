@@ -1,10 +1,14 @@
 ﻿namespace ForzaData.Core
 {
+
 	/// <summary>
-	/// "Car dash" data structure
+	/// "Horizon Car dash" data structure
 	/// </summary>
-	public struct ForzaCarDashDataStruct
+	public struct ForzaHorizonCarDashDataStruct
 	{
+		public uint UnkownSomeType;
+		public byte[] UnkownArrayHitTest;
+
 		//Position (meters)
 		public float PositionX;
 		public float PositionY;
@@ -39,5 +43,7 @@
 
 		public sbyte NormalizedDrivingLine;
 		public sbyte NormalizedAIBrakeDifference;
+
+		public byte UnkownFlag;
 	}
 }

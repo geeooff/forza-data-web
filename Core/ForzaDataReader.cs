@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.IO;
 
 namespace ForzaData.Core
 {
@@ -14,7 +10,7 @@ namespace ForzaData.Core
 
 		public ForzaDataReader()
 		{
-			
+
 		}
 
 		public bool TryRead(byte[] input, out ForzaDataStruct output)
@@ -199,10 +195,49 @@ namespace ForzaData.Core
 			};
 		}
 
-		private byte[] ReadHorizonCarDashData(BinaryReader reader)
+		private ForzaHorizonCarDashDataStruct ReadHorizonCarDashData(BinaryReader reader)
 		{
-			int length = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-			return reader.ReadBytes(length);
+			return new ForzaHorizonCarDashDataStruct()
+			{
+				UnkownSomeType = reader.ReadUInt32(),
+				UnkownArrayHitTest = reader.ReadBytes(8),
+
+				PositionX = reader.ReadSingle(),
+				PositionY = reader.ReadSingle(),
+				PositionZ = reader.ReadSingle(),
+
+				Speed = reader.ReadSingle(),
+				Power = reader.ReadSingle(),
+				Torque = reader.ReadSingle(),
+
+				TireTempFrontLeft = reader.ReadSingle(),
+				TireTempFrontRight = reader.ReadSingle(),
+				TireTempRearLeft = reader.ReadSingle(),
+				TireTempRearRight = reader.ReadSingle(),
+
+				Boost = reader.ReadSingle(),
+				Fuel = reader.ReadSingle(),
+				DistanceTraveled = reader.ReadSingle(),
+				BestLap = reader.ReadSingle(),
+				LastLap = reader.ReadSingle(),
+				CurrentLap = reader.ReadSingle(),
+				CurrentRaceTime = reader.ReadSingle(),
+
+				LapNumber = reader.ReadUInt16(),
+				RacePosition = reader.ReadByte(),
+
+				Accel = reader.ReadByte(),
+				Brake = reader.ReadByte(),
+				Clutch = reader.ReadByte(),
+				HandBrake = reader.ReadByte(),
+				Gear = reader.ReadByte(),
+				Steer = reader.ReadSByte(),
+
+				NormalizedDrivingLine = reader.ReadSByte(),
+				NormalizedAIBrakeDifference = reader.ReadSByte(),
+
+				UnkownFlag = reader.ReadByte()
+			};
 		}
 	}
 }
