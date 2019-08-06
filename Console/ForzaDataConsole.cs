@@ -136,7 +136,7 @@ namespace ForzaData.Console
 					ConsoleWriteAt(27, 3, $"{cdd.Speed * 3.6f,7:####0.0}", 7);
 					ConsoleWriteAt(27, 4, $"{cdd.Power / 1000f,7:####0.0}", 7);
 					ConsoleWriteAt(27, 5, $"{cdd.Torque,7:####0.0}", 7);
-					ConsoleWriteAt(27, 6, $"{cdd.Boost,7:####0.0}", 7);
+					ConsoleWriteAt(27, 6, $"{cdd.Boost / 14.5f,7:####0.0}", 7);
 
 					// laps
 					ConsoleWriteAt(50, 3, GetRaceTimeValue(cdd.CurrentLap), 14);
