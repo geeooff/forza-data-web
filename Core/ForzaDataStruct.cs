@@ -19,10 +19,5 @@
 		/// Car dash data
 		/// </summary>
 		public ForzaCarDashDataStruct? CarDash;
-
-		/// <summary>
-		/// Horizon specific car dash data
-		/// </summary>
-		public ForzaHorizonCarDashDataStruct? HorizonCarDash;
 	}
 }

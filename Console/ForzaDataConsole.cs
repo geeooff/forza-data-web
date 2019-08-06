@@ -116,42 +116,6 @@ namespace ForzaData.Console
 				ConsoleWriteAt(25, 15, $"{sd.AngularVelocityY,11:###0.000000}", 11);
 				ConsoleWriteAt(37, 15, $"{sd.AngularVelocityZ,11:###0.000000}", 11);
 
-				if (data.HorizonCarDash.HasValue)
-				{
-					var hcd = data.HorizonCarDash.Value;
-
-					// line 2
-					ConsoleWriteAt(4, 1, $"{hcd.LapNumber + 1}", 3);
-					ConsoleWriteAt(17, 1, $"{hcd.RacePosition}", 2);
-					ConsoleWriteAt(25, 1, $"{hcd.Fuel * 100f,5:##0.0}", 5);
-					ConsoleWriteAt(42, 1, $"{hcd.DistanceTraveled / 1000f,5:##0.0}", 5);
-					ConsoleWriteAt(56, 1, GetRaceTimeValue(hcd.CurrentRaceTime), 14);
-
-					// position
-					ConsoleWriteAt(13, 11, $"{hcd.PositionX,11:###0.0000}", 11);
-					ConsoleWriteAt(25, 11, $"{hcd.PositionY,11:###0.0000}", 11);
-					ConsoleWriteAt(37, 11, $"{hcd.PositionZ,11:###0.0000}", 11);
-
-					// speed, power, torque
-					ConsoleWriteAt(27, 3, $"{hcd.Speed * 3.6f,7:####0.0}", 7);
-					ConsoleWriteAt(27, 4, $"{hcd.Power / 1000f,7:####0.0}", 7);
-					ConsoleWriteAt(27, 5, $"{hcd.Torque,7:####0.0}", 7);
-					ConsoleWriteAt(27, 6, $"{hcd.Boost,7:####0.0}", 7);
-
-					// laps
-					ConsoleWriteAt(50, 3, GetRaceTimeValue(hcd.CurrentLap), 14);
-					ConsoleWriteAt(50, 4, GetRaceTimeValue(hcd.LastLap), 14);
-					ConsoleWriteAt(50, 5, GetRaceTimeValue(hcd.BestLap), 14);
-
-					// controls
-					ConsoleWriteAt(63, 8, $"{hcd.Accel / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 9, $"{hcd.Brake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 10, $"{hcd.Clutch / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 11, $"{hcd.HandBrake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 12, $"{hcd.Gear,3:##0}", 3);
-					ConsoleWriteAt(62, 13, $"{hcd.Steer / 1.27f,3:+0;-0;0}", 4);
-				}
-
 				if (data.CarDash.HasValue)
 				{
 					ForzaCarDashDataStruct cdd = data.CarDash.Value;

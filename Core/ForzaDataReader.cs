@@ -54,7 +54,7 @@ namespace ForzaData.Core
 
 						// undocumented forza horizon 4 car dash data
 						case ForzaDataVersion.HorizonCarDash:
-							output.HorizonCarDash = ReadHorizonCarDashData(reader);
+							output.CarDash = ReadHorizonCarDashData(reader);
 							break;
 					}
 				}
@@ -195,13 +195,13 @@ namespace ForzaData.Core
 			};
 		}
 
-		private ForzaHorizonCarDashDataStruct ReadHorizonCarDashData(BinaryReader reader)
+		private ForzaCarDashDataStruct ReadHorizonCarDashData(BinaryReader reader)
 		{
-			return new ForzaHorizonCarDashDataStruct()
-			{
-				UnkownSomeType = reader.ReadUInt32(),
-				UnkownArrayHitTest = reader.ReadBytes(8),
+			reader.ReadUInt32(); //TODO: Some unkown type value, changes when the car is changed
+			reader.ReadBytes(8); //TODO: 8 bytes, values changes when breakable objects are hit
 
+			var data = new ForzaCarDashDataStruct()
+			{
 				PositionX = reader.ReadSingle(),
 				PositionY = reader.ReadSingle(),
 				PositionZ = reader.ReadSingle(),
@@ -234,10 +234,12 @@ namespace ForzaData.Core
 				Steer = reader.ReadSByte(),
 
 				NormalizedDrivingLine = reader.ReadSByte(),
-				NormalizedAIBrakeDifference = reader.ReadSByte(),
-
-				UnkownFlag = reader.ReadByte()
+				NormalizedAIBrakeDifference = reader.ReadSByte()
 			};
+
+			reader.ReadByte(); //TODO: Unkown flag, something like the Normalized values?
+
+			return data;
 		}
 	}
 }
