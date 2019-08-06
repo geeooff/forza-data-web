@@ -1,8 +1,6 @@
-﻿using ForzaData.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Text;
+using ForzaData.Core;
 
 namespace ForzaData.Console
 {
@@ -66,13 +64,15 @@ namespace ForzaData.Console
 				System.Console.WriteLine("Current XXXXX RPM   Speed  XXXXX.X KPH   Cur. lap X.XX:XX:XX.XXX");
 				System.Console.WriteLine("Idle    XXXXX RPM   Power  XXXXX.X KW    Last lap X.XX:XX:XX.XXX");
 				System.Console.WriteLine("Maximum XXXXX RPM   Torque XXXXX.X Nm    Best lap X.XX:XX:XX.XXX");
+				System.Console.WriteLine("                    Boost  XXXXX.X Bar                          ");
 				System.Console.WriteLine();
 				System.Console.WriteLine("                X(right)       Y(up)  Z(forward)   Accelerator XXX %");
 				System.Console.WriteLine("Acceleration XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Brake       XXX %");
 				System.Console.WriteLine("Velocity     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Clutch      XXX %");
-				System.Console.WriteLine("                                                   Handbrake   XXX %");
-				System.Console.WriteLine("                     Yaw       Pitch        Roll   Gear        XXX");
-				System.Console.WriteLine("Position     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Steer       XXX %");
+				System.Console.WriteLine("Position     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Handbrake   XXX %");
+				System.Console.WriteLine("                                                   Gear        XXX");
+				System.Console.WriteLine("                     Yaw       Pitch        Roll   Steer       XXX %");
+				System.Console.WriteLine("Position     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX");
 				System.Console.WriteLine("Ang.Velocity XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX");
 			}
 		}
@@ -97,24 +97,60 @@ namespace ForzaData.Console
 				ConsoleWriteAt(8, 5, $"{sd.EngineMaxRpm,5:####0}", 5);
 
 				// acceleration
-				ConsoleWriteAt(13, 8, $"{sd.AccelerationX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 8, $"{sd.AccelerationY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 8, $"{sd.AccelerationZ,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 9, $"{sd.AccelerationX,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 9, $"{sd.AccelerationY,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 9, $"{sd.AccelerationZ,11:###0.000000}", 11);
 
 				// velocity
-				ConsoleWriteAt(13, 9, $"{sd.VelocityX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 9, $"{sd.VelocityY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 9, $"{sd.VelocityZ,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 10, $"{sd.VelocityX,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 10, $"{sd.VelocityY,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 10, $"{sd.VelocityZ,11:###0.000000}", 11);
 
 				// angle
-				ConsoleWriteAt(13, 12, $"{sd.Yaw,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 12, $"{sd.Pitch,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 12, $"{sd.Roll,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 14, $"{sd.Yaw,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 14, $"{sd.Pitch,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 14, $"{sd.Roll,11:###0.000000}", 11);
 
 				// angular velocity
-				ConsoleWriteAt(13, 13, $"{sd.AngularVelocityX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 13, $"{sd.AngularVelocityY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 13, $"{sd.AngularVelocityZ,11:###0.000000}", 11);
+				ConsoleWriteAt(13, 15, $"{sd.AngularVelocityX,11:###0.000000}", 11);
+				ConsoleWriteAt(25, 15, $"{sd.AngularVelocityY,11:###0.000000}", 11);
+				ConsoleWriteAt(37, 15, $"{sd.AngularVelocityZ,11:###0.000000}", 11);
+
+				if (data.HorizonCarDash.HasValue)
+				{
+					var hcd = data.HorizonCarDash.Value;
+
+					// line 2
+					ConsoleWriteAt(4, 1, $"{hcd.LapNumber + 1}", 3);
+					ConsoleWriteAt(17, 1, $"{hcd.RacePosition}", 2);
+					ConsoleWriteAt(25, 1, $"{hcd.Fuel * 100f,5:##0.0}", 5);
+					ConsoleWriteAt(42, 1, $"{hcd.DistanceTraveled / 1000f,5:##0.0}", 5);
+					ConsoleWriteAt(56, 1, GetRaceTimeValue(hcd.CurrentRaceTime), 14);
+
+					// position
+					ConsoleWriteAt(13, 11, $"{hcd.PositionX,11:###0.0000}", 11);
+					ConsoleWriteAt(25, 11, $"{hcd.PositionY,11:###0.0000}", 11);
+					ConsoleWriteAt(37, 11, $"{hcd.PositionZ,11:###0.0000}", 11);
+
+					// speed, power, torque
+					ConsoleWriteAt(27, 3, $"{hcd.Speed * 3.6f,7:####0.0}", 7);
+					ConsoleWriteAt(27, 4, $"{hcd.Power / 1000f,7:####0.0}", 7);
+					ConsoleWriteAt(27, 5, $"{hcd.Torque,7:####0.0}", 7);
+					ConsoleWriteAt(27, 6, $"{hcd.Boost,7:####0.0}", 7);
+
+					// laps
+					ConsoleWriteAt(50, 3, GetRaceTimeValue(hcd.CurrentLap), 14);
+					ConsoleWriteAt(50, 4, GetRaceTimeValue(hcd.LastLap), 14);
+					ConsoleWriteAt(50, 5, GetRaceTimeValue(hcd.BestLap), 14);
+
+					// controls
+					ConsoleWriteAt(63, 8, $"{hcd.Accel / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 9, $"{hcd.Brake / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 10, $"{hcd.Clutch / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 11, $"{hcd.HandBrake / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 12, $"{hcd.Gear,3:##0}", 3);
+					ConsoleWriteAt(62, 13, $"{hcd.Steer / 1.27f,3:+0;-0;0}", 4);
+				}
 
 				if (data.CarDash.HasValue)
 				{
@@ -127,10 +163,16 @@ namespace ForzaData.Console
 					ConsoleWriteAt(42, 1, $"{cdd.DistanceTraveled / 1000f,5:##0.0}", 5);
 					ConsoleWriteAt(56, 1, GetRaceTimeValue(cdd.CurrentRaceTime), 14);
 
+					// position
+					ConsoleWriteAt(13, 11, $"{cdd.PositionX,11:###0.0000}", 11);
+					ConsoleWriteAt(25, 11, $"{cdd.PositionY,11:###0.0000}", 11);
+					ConsoleWriteAt(37, 11, $"{cdd.PositionZ,11:###0.0000}", 11);
+
 					// speed, power, torque
 					ConsoleWriteAt(27, 3, $"{cdd.Speed * 3.6f,7:####0.0}", 7);
 					ConsoleWriteAt(27, 4, $"{cdd.Power / 1000f,7:####0.0}", 7);
 					ConsoleWriteAt(27, 5, $"{cdd.Torque,7:####0.0}", 7);
+					ConsoleWriteAt(27, 6, $"{cdd.Boost,7:####0.0}", 7);
 
 					// laps
 					ConsoleWriteAt(50, 3, GetRaceTimeValue(cdd.CurrentLap), 14);
@@ -138,12 +180,12 @@ namespace ForzaData.Console
 					ConsoleWriteAt(50, 5, GetRaceTimeValue(cdd.BestLap), 14);
 
 					// controls
-					ConsoleWriteAt(63, 7, $"{cdd.Accel / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 8, $"{cdd.Brake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 9, $"{cdd.Clutch / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 10, $"{cdd.HandBrake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 11, $"{cdd.Gear,3:##0}", 3);
-					ConsoleWriteAt(62, 12, $"{cdd.Steer / 1.27f,3:+0;-0;0}", 4); 
+					ConsoleWriteAt(63, 8, $"{cdd.Accel / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 9, $"{cdd.Brake / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 10, $"{cdd.Clutch / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 11, $"{cdd.HandBrake / 2.55f,3:##0}", 3);
+					ConsoleWriteAt(63, 12, $"{cdd.Gear,3:##0}", 3);
+					ConsoleWriteAt(62, 13, $"{cdd.Steer / 1.27f,3:+0;-0;0}", 4);
 				}
 			}
 		}
