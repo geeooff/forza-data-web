@@ -11,6 +11,8 @@
 		<Product>ForzaDataWeb</Product>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PublishTrimmed>true</PublishTrimmed>
+		<PublishReadyToRun>true</PublishReadyToRun>
 	</PropertyGroup>
 
 	<ItemGroup>

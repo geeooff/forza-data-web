@@ -11,7 +11,9 @@
 		<Product>ForzaDataWeb</Product>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	</PropertyGroup>
+		<PublishTrimmed>true</PublishTrimmed>
+		<PublishReadyToRun>true</PublishReadyToRun>
+	</PropertyGroup>	
 
 	<ItemGroup>
 		<PackageReference Include="PowArgs" Version="1.1.0" />

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,8 +9,10 @@
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
 		<Product>ForzaDataWeb</Product>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PublishTrimmed>true</PublishTrimmed>
+		<PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
