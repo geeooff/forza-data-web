@@ -53,13 +53,23 @@ namespace ForzaData.Core
 					{
 						// forza motorsport 7 car dash data
 						case ForzaDataVersion.CarDash:
-							output.CarDash = ReadCarDashData(reader);
-							break;
-
+							{
+								output.CarDash = ReadCarDashData(reader);
+								break;
+							}
 						// undocumented forza horizon 4 car dash data
 						case ForzaDataVersion.HorizonCarDash:
-							output.HorizonCarDash = ReadHorizonCarDashData(reader);
-							break;
+							{
+								// Taken from forum posts, we found that the sled data is in the same place.
+								// The CarDashData is 12 Bytes after the sled data, (unknown source)
+								// Therefore we read an extra 12 Bytes, into data section 1
+								// we then read the cardash
+								// then the final data section 2
+								output.HorizonData1 = ReadHorizonData1(reader);
+								output.CarDash = ReadCarDashData(reader);
+								output.HorizonData2 = ReadHorizonData2(reader);
+								break;
+							}
 					}
 				}
 			}
@@ -69,13 +79,13 @@ namespace ForzaData.Core
 
 		private ForzaDataVersion ReadVersion(byte[] input)
 		{
-			switch (input.Length)
+			return input.Length switch
 			{
-				case SledPacketSize: return ForzaDataVersion.Sled;
-				case CarDashPacketSize: return ForzaDataVersion.CarDash;
-				case HorizonCarDashPacketSize: return ForzaDataVersion.HorizonCarDash;
-				default: return ForzaDataVersion.Unknown;
-			}
+				SledPacketSize => ForzaDataVersion.Sled,
+				CarDashPacketSize => ForzaDataVersion.CarDash,
+				HorizonCarDashPacketSize => ForzaDataVersion.HorizonCarDash,
+				_ => ForzaDataVersion.Unknown,
+			};
 		}
 
 		private ForzaSledDataStruct ReadSledData(BinaryReader reader)
@@ -199,7 +209,12 @@ namespace ForzaData.Core
 			};
 		}
 
-		private byte[] ReadHorizonCarDashData(BinaryReader reader)
+		private byte[] ReadHorizonData1(BinaryReader reader)
+		{
+			return reader.ReadBytes(12);
+		}
+
+		private byte[] ReadHorizonData2(BinaryReader reader)
 		{
 			int length = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
 			return reader.ReadBytes(length);

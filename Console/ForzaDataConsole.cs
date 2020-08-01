@@ -83,6 +83,7 @@ namespace ForzaData.Console
 
 			lock (SyncRoot)
 			{
+
 				// line 1
 				ConsoleWriteAt(5, 0, GetRaceIsOneValue(sd.IsRaceOn), 3, GetRaceIsOneValueColor(sd.IsRaceOn));
 				ConsoleWriteAt(13, 0, $"{sd.CarOrdinal,11:##0}", 11);
@@ -116,35 +117,33 @@ namespace ForzaData.Console
 				ConsoleWriteAt(25, 13, $"{sd.AngularVelocityY,11:###0.000000}", 11);
 				ConsoleWriteAt(37, 13, $"{sd.AngularVelocityZ,11:###0.000000}", 11);
 
-				if (data.CarDash.HasValue)
-				{
-					ForzaCarDashDataStruct cdd = data.CarDash.Value;
+				
+				ForzaCarDashDataStruct cdd = data.CarDash;
 
-					// line 2
-					ConsoleWriteAt(4, 1, $"{cdd.LapNumber + 1}", 3);
-					ConsoleWriteAt(17, 1, $"{cdd.RacePosition}", 2);
-					ConsoleWriteAt(25, 1, $"{cdd.Fuel * 100f,5:##0.0}", 5);
-					ConsoleWriteAt(42, 1, $"{cdd.DistanceTraveled / 1000f,5:##0.0}", 5);
-					ConsoleWriteAt(56, 1, GetRaceTimeValue(cdd.CurrentRaceTime), 14);
+				// line 2
+				ConsoleWriteAt(4, 1, $"{cdd.LapNumber + 1}", 3);
+				ConsoleWriteAt(17, 1, $"{cdd.RacePosition}", 2);
+				ConsoleWriteAt(25, 1, $"{cdd.Fuel * 100f,5:##0.0}", 5);
+				ConsoleWriteAt(42, 1, $"{cdd.DistanceTraveled / 1000f,5:##0.0}", 5);
+				ConsoleWriteAt(56, 1, GetRaceTimeValue(cdd.CurrentRaceTime), 14);
 
-					// speed, power, torque
-					ConsoleWriteAt(27, 3, $"{cdd.Speed * 3.6f,7:####0.0}", 7);
-					ConsoleWriteAt(27, 4, $"{cdd.Power / 1000f,7:####0.0}", 7);
-					ConsoleWriteAt(27, 5, $"{cdd.Torque,7:####0.0}", 7);
+				// speed, power, torque
+				ConsoleWriteAt(27, 3, $"{cdd.Speed * 3.6f,7:####0.0}", 7);
+				ConsoleWriteAt(27, 4, $"{cdd.Power / 1000f,7:####0.0}", 7);
+				ConsoleWriteAt(27, 5, $"{cdd.Torque,7:####0.0}", 7);
 
-					// laps
-					ConsoleWriteAt(50, 3, GetRaceTimeValue(cdd.CurrentLap), 14);
-					ConsoleWriteAt(50, 4, GetRaceTimeValue(cdd.LastLap), 14);
-					ConsoleWriteAt(50, 5, GetRaceTimeValue(cdd.BestLap), 14);
+				// laps
+				ConsoleWriteAt(50, 3, GetRaceTimeValue(cdd.CurrentLap), 14);
+				ConsoleWriteAt(50, 4, GetRaceTimeValue(cdd.LastLap), 14);
+				ConsoleWriteAt(50, 5, GetRaceTimeValue(cdd.BestLap), 14);
 
-					// controls
-					ConsoleWriteAt(63, 7, $"{cdd.Accel / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 8, $"{cdd.Brake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 9, $"{cdd.Clutch / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 10, $"{cdd.HandBrake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 11, $"{cdd.Gear,3:##0}", 3);
-					ConsoleWriteAt(62, 12, $"{cdd.Steer / 1.27f,3:+0;-0;0}", 4); 
-				}
+				// controls
+				ConsoleWriteAt(63, 7, $"{cdd.Accel / 2.55f,3:##0}", 3);
+				ConsoleWriteAt(63, 8, $"{cdd.Brake / 2.55f,3:##0}", 3);
+				ConsoleWriteAt(63, 9, $"{cdd.Clutch / 2.55f,3:##0}", 3);
+				ConsoleWriteAt(63, 10, $"{cdd.HandBrake / 2.55f,3:##0}", 3);
+				ConsoleWriteAt(63, 11, $"{cdd.Gear,3:##0}", 3);
+				ConsoleWriteAt(62, 12, $"{cdd.Steer / 1.27f,3:+0;-0;0}", 4);
 			}
 		}
 

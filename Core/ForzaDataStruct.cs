@@ -22,11 +22,16 @@ namespace ForzaData.Core
 		/// <summary>
 		/// Car dash data
 		/// </summary>
-		public ForzaCarDashDataStruct? CarDash;
+		public ForzaCarDashDataStruct CarDash;
 
 		/// <summary>
-		/// Horizon specific car dash data
+		/// Horizon specific data part 1
 		/// </summary>
-		public byte[] HorizonCarDash;
+		public byte[] HorizonData1;
+
+		/// <summary>
+		/// Horizon specific data part 2
+		/// </summary>
+		public byte[] HorizonData2;
 	}
 }

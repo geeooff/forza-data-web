@@ -9,7 +9,7 @@ namespace Receiver.Configuration
     {
 		public AppSettings()
 		{
-			UdpPort = 7777;
+			UdpPort = 12000;
 		}
 
 		public int UdpPort { get; set; }
