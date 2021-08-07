@@ -36,19 +36,15 @@ namespace ForzaData.SampleRecorder
 		public override void OnNext(byte[] value)
 		{
 			long elapsed = _stopwatch.ElapsedTicks;
-			int length = value.Length;
 
 			if (!_stopwatch.IsRunning)
 			{
 				_stopwatch.Start();
 			}
 
-			_writer.Write(elapsed);	// 8 bytes
-			_writer.Write(length);	// 4 bytes
-			_writer.Write(value);
-
-			BytesRead += length;
-			BytesWritten += (length + 12);
+			_writer.Write(elapsed);			BytesWritten += 8;				// 8 bytes
+			_writer.Write(value.Length);	BytesWritten += 4;				// 4 bytes
+			_writer.Write(value);			BytesWritten += value.Length;	// n bytes
 		}
 
 		protected virtual void Dispose(bool isDisposing)
