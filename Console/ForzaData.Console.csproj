@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp2.2</TargetFramework>
-		<Version>0.5</Version>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Version>0.6</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
 		<RepositoryType>git</RepositoryType>
@@ -11,7 +11,9 @@
 		<Product>ForzaDataWeb</Product>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	</PropertyGroup>
+		<PublishTrimmed>true</PublishTrimmed>
+		<PublishReadyToRun>true</PublishReadyToRun>
+	</PropertyGroup>	
 
 	<ItemGroup>
 		<PackageReference Include="PowArgs" Version="1.1.0" />

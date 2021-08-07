@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Receiver.Configuration;
 using Receiver.Services;
 
@@ -35,10 +35,11 @@ namespace Receiver
 
 			services.AddSingleton<ForzaDataListener>();
 
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddControllersWithViews();
+			services.AddRazorPages();
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -53,12 +54,13 @@ namespace Receiver
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseCookiePolicy();
+			
+			app.UseRouting();
 
-			app.UseMvc(routes =>
+			app.UseEndpoints(endpoints =>
 			{
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapRazorPages();
 			});
 		}
 	}

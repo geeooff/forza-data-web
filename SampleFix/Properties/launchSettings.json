@@ -1,0 +1,44 @@
+{
+  "profiles": {
+    "FM7_CarDash_2019-04-25_Xbox_TS-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseTimestamp -IgnoreInvalidChunks -Input FM7_CarDash_2019-04-25_Xbox.bin -Output FM7_CarDash_2019-04-25_Xbox_TS-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FM7_CarDash_2019-04-25_Xbox_60Hz-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseStaticFrequency -IgnoreInvalidChunks -Input FM7_CarDash_2019-04-25_Xbox.bin -Output FM7_CarDash_2019-04-25_Xbox_60Hz-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FH4_FreeRoam_Winter_2019-04-25_Xbox_TS-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseTimestamp -IgnoreInvalidChunks -Input FH4_FreeRoam_Winter_2019-04-25_Xbox.bin -Output FH4_FreeRoam_Winter_2019-04-25_Xbox_TS-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FH4_FreeRoam_Winter_2019-04-25_Xbox_60Hz-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseStaticFrequency -IgnoreInvalidChunks -Input FH4_FreeRoam_Winter_2019-04-25_Xbox.bin -Output FH4_FreeRoam_Winter_2019-04-25_Xbox_60Hz-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FH4_Race_Winter_2019-04-25_Xbox_TS-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseTimestamp -IgnoreInvalidChunks -Input FH4_Race_Winter_2019-04-25_Xbox.bin -Output FH4_Race_Winter_2019-04-25_Xbox_TS-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FH4_Race_Winter_2019-04-25_Xbox_60Hz-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseStaticFrequency -IgnoreInvalidChunks -Input FH4_Race_Winter_2019-04-25_Xbox.bin -Output FH4_Race_Winter_2019-04-25_Xbox_60Hz-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FM7_Sled_2019-04-25_Xbox_TS-fix": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseTimestamp -IgnoreInvalidChunks -Input FM7_Sled_2019-04-25_Xbox.bin -Output FM7_Sled_2019-04-25_Xbox_TS-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    },
+    "FM7_Sled_2019-04-25_Xbox_60Hz-fix.bin": {
+      "commandName": "Project",
+      "commandLineArgs": "-UseStaticFrequency -IgnoreInvalidChunks -Input FM7_Sled_2019-04-25_Xbox.bin -Output FM7_Sled_2019-04-25_Xbox_60Hz-fix.bin",
+      "workingDirectory": "$(SolutionDir)\\Samples"
+    }
+  }
+}
