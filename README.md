@@ -34,7 +34,7 @@ _Note_ : Forza Horizon 4 is actually using an undocumented protocol. Only the Sl
 
 1. [Git](https://www.git-scm.com/downloads)
 2. [Git LFS](https://git-lfs.github.com)
-1. [.NET Core SDK 3.1.102](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+1. [.NET Core SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 
 
 ### Get sources
