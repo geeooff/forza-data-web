@@ -8,6 +8,13 @@ namespace ForzaData.SampleRecorder
 {
 	class Program
 	{
+		internal enum ExitCodes
+		{
+			ArgsError = -1,
+			OK = 0,
+			Help = 1
+		}
+
 		private static Arguments _args;
 
 		static void Main(string[] args)
@@ -18,16 +25,16 @@ namespace ForzaData.SampleRecorder
 			}
 			catch (Exception ex)
 			{
-				System.Console.Error.WriteLine(ex.Message);
+				Console.Error.WriteLine(ex.Message);
+				ShowHelp();
+				Exit(ExitCodes.ArgsError);
 				return;
 			}
 
 			if (_args.Help)
 			{
-				foreach (string helpTextLine in PowArgs.Helper<Arguments>.GetHelpText())
-				{
-					System.Console.WriteLine(helpTextLine);
-				}
+				ShowHelp();
+				Exit(ExitCodes.Help);
 				return;
 			}
 
@@ -86,6 +93,21 @@ namespace ForzaData.SampleRecorder
 			{
 				outputFile.Delete();
 			}
+
+			Exit(ExitCodes.OK);
+		}
+
+		private static void ShowHelp()
+		{
+			foreach (string helpTextLine in PowArgs.Helper<Arguments>.GetHelpText())
+			{
+				Console.Out.WriteLine(helpTextLine);
+			}
+		}
+
+		private static void Exit(ExitCodes exitCode)
+		{
+			Environment.Exit((int)exitCode);
 		}
 	}
 }

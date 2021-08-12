@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -10,6 +11,13 @@ namespace ForzaData.Console
 {
 	class Program
 	{
+		internal enum ExitCodes
+		{
+			ArgsError = -1,
+			OK = 0,
+			Help = 1
+		}
+
 		private static Arguments _args;
 
 		static void Main(string[] args)
@@ -21,15 +29,15 @@ namespace ForzaData.Console
 			catch (Exception ex)
 			{
 				System.Console.Error.WriteLine(ex.Message);
+				ShowHelp();
+				Exit(ExitCodes.ArgsError);
 				return;
 			}
 
 			if (_args.Help)
 			{
-				foreach (string helpTextLine in PowArgs.Helper<Arguments>.GetHelpText())
-				{
-					System.Console.WriteLine(helpTextLine);
-				}
+				ShowHelp();
+				Exit(ExitCodes.Help);
 				return;
 			}
 
@@ -61,6 +69,21 @@ namespace ForzaData.Console
 
 				console.Unsubscribe();
 			}
+
+			Exit(ExitCodes.OK);
+		}
+
+		private static void ShowHelp()
+		{
+			foreach (string helpTextLine in PowArgs.Helper<Arguments>.GetHelpText())
+			{
+				System.Console.Out.WriteLine(helpTextLine);
+			}
+		}
+
+		private static void Exit(ExitCodes exitCode)
+		{
+			Environment.Exit((int)exitCode);
 		}
 	}
 }
