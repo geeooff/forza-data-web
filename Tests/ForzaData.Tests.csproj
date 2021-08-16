@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<IsPackable>false</IsPackable>
-		<Version>0.6</Version>
+		<Version>0.7</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
 		<RepositoryType>git</RepositoryType>
