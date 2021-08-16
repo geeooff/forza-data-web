@@ -11,7 +11,7 @@ namespace ForzaData.SampleFrequencyFix
 		[PowArgs.Attributes.Argument("Use constant 60 Hz to resynchronize sample")]
 		public bool UseStaticFrequency { get; set; } = false;
 
-		[PowArgs.Attributes.Argument("Use data's decoded timestamps and resynchronize sample to them")]
+		[PowArgs.Attributes.Argument("Use forza data's decoded timestamps to resynchronize (recommended)")]
 		public bool UseTimestamp { get; set; } = false;
 
 		[PowArgs.Attributes.Argument("Ignores invalid chunks (not increasing / not parsable)")]

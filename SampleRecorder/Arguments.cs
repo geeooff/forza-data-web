@@ -11,7 +11,7 @@ namespace ForzaData.SampleRecorder
 		[PowArgs.Attributes.Argument("UDP local network port to bind")]
 		public int Port { get; set; } = 7777;
 
-		[PowArgs.Attributes.Argument("IP of Forza Motorsport 7 server (your console) to listen to", required: true)]
+		[PowArgs.Attributes.Argument("IP of server (your PC or console running the game) to listen to", required: true)]
 		public string ServerIpAddress { get; set; }
 
 		[PowArgs.Attributes.Argument("Output file", required: true)]
