@@ -24,9 +24,9 @@ No Web interface for the moment.
 | Game               | Sled     | Car Dash | _Horizon_ |
 |--------------------|----------|----------|-----------|
 | Forza Motorsport 7 | Yes      | Yes      | N/A       |
-| Forza Horizon 4    | Yes      | No       | No        |
+| Forza Horizon 4    | Yes      | Yes      | No*       |
 
-_Note_ : Forza Horizon 4 is actually using an undocumented protocol. Only the Sled part of it can be read.
+_*_ Forza Horizon 4 is emitting 13 additional bytes. Only these are ignored.
 
 ## How to test
 
