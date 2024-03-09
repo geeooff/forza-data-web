@@ -1,22 +1,21 @@
-﻿using ForzaData.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.IO.Pipelines;
+using ForzaData.Core;
 
 namespace ForzaData.SampleRecorder
 {
-	public class UdpStreamSampleRecorder : UdpStreamObserver, IDisposable
+	public class UdpStreamSampleRecorder : UdpStreamObserver
 	{
-		private readonly BinaryWriter _writer;
 		private readonly Stopwatch _stopwatch;
-
-		private bool _isDisposed = false;
+		private readonly Stream _output;
+		private readonly PipeWriter _writer;
 
 		public UdpStreamSampleRecorder(Stream output)
 		{
-			_writer = new BinaryWriter(output, Encoding.UTF8, true);
+			_output = output ?? throw new ArgumentNullException(nameof(output));
+			_writer = PipeWriter.Create(output);
 			_stopwatch = new Stopwatch();
 		}
 
@@ -25,7 +24,9 @@ namespace ForzaData.SampleRecorder
 
 		public override void OnCompleted()
 		{
-			_writer.Flush();
+			_stopwatch.Stop();
+			_writer.Complete();
+			_output.Flush();
 		}
 
 		public override void OnError(Exception error)
@@ -35,34 +36,20 @@ namespace ForzaData.SampleRecorder
 
 		public override void OnNext(byte[] value)
 		{
-			long elapsed = _stopwatch.ElapsedTicks;
-
 			if (!_stopwatch.IsRunning)
 			{
 				_stopwatch.Start();
 			}
 
-			_writer.Write(elapsed);			BytesWritten += 8;				// 8 bytes
-			_writer.Write(value.Length);	BytesWritten += 4;				// 4 bytes
-			_writer.Write(value);			BytesWritten += value.Length;	// n bytes
-		}
+			long elapsed = _stopwatch.Elapsed.Ticks;
 
-		protected virtual void Dispose(bool isDisposing)
-		{
-			if (!_isDisposed)
-			{
-				if (isDisposing)
-				{
-					_writer.Dispose();
-				}
+			BytesRead += value.Length;
 
-				_isDisposed = true;
-			}
-		}
+			)
 
-		public void Dispose()
-		{
-			Dispose(true);
+			_output.Write(BitConverter.GetBytes(elapsed));		BytesWritten += 8;				// 8 bytes
+			_output.Write(BitConverter.GetBytes(value.Length));	BytesWritten += 4;				// 4 bytes
+			_output.Write(value);								BytesWritten += value.Length;	// n bytes
 		}
 	}
 }

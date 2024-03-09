@@ -6,10 +6,10 @@ using System.Text;
 using ForzaData.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ForzaData.Tests
+namespace ForzaData.Tests.ComparisonTests
 {
 	[TestClass]
-	public class ForzaDataReaderTests
+	public class ForzaDataReaderImplComparisonTest
 	{
 		[TestMethod]
 		[DataTestMethod]

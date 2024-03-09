@@ -1,36 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-		<Version>0.7</Version>
-		<Authors>Geoffrey Vancoetsem</Authors>
+    <Version>0.7</Version>
+    <Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
-		<Product>ForzaDataWeb</Product>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
+    <Product>ForzaDataWeb</Product>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="PowArgs" Version="1.1.0" />
+    <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Core\ForzaData.Core.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-		<None Include="..\LICENSE">
-			<Pack>True</Pack>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
 			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\README.md">
-			<Pack>True</Pack>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
 			<PackagePath></PackagePath>
-		</None>
+    </None>
   </ItemGroup>
-
 </Project>
