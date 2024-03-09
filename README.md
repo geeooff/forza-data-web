@@ -34,7 +34,7 @@ _*_ Forza Horizon 4 is emitting 13 additional bytes. Only these are ignored.
 
 1. [Git](https://www.git-scm.com/downloads)
 2. [Git LFS](https://git-lfs.github.com)
-1. [.NET Core SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+1. [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet)
 
 
 ### Get sources

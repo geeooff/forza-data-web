@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<Version>0.7</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
@@ -36,9 +36,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Samples\" />
+		<Folder Include="Samples\" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<Content Include="..\Samples\FM7_Sled_2019-04-25_Xbox.bin" Link="Samples\FM7_Sled_2019-04-25_Xbox.bin">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
