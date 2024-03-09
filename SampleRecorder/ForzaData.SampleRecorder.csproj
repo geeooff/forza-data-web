@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
 		<Version>0.7</Version>
 		<Authors>Geoffrey Vancoetsem</Authors>
 		<Company></Company>
@@ -12,17 +12,17 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="PowArgs" Version="1.1.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="PowArgs" Version="1.1.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Core\ForzaData.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Core\ForzaData.Core.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
 		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
@@ -31,6 +31,6 @@
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
-  </ItemGroup>
+	</ItemGroup>
 
 </Project>
