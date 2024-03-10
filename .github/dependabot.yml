@@ -1,0 +1,21 @@
+version: 2
+
+updates:
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # devcontainers
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # NuGet
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: weekly
