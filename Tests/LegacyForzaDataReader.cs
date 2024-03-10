@@ -52,14 +52,19 @@ namespace ForzaData.Core
 					switch (output.Version)
 					{
 						// forza motorsport 7 car dash data
-						case ForzaDataVersion.CarDash:
+						case ForzaDataVersion.CarDashV1:
 							output.CarDash = ReadCarDashData(reader);
 							break;
 
 						// undocumented forza horizon 4 car dash data
-						case ForzaDataVersion.HorizonCarDash:
-							output.HorizonCarDash = ReadHorizonCarDashData(reader);
+						case ForzaDataVersion.CarDashV2:
 							break;
+
+						default:
+							throw new NotImplementedException(
+								$"Unimplemented forza data version {output.Version}. " +
+								$"This legacy data reader is not meant to be used after FH4."
+							);
 					}
 				}
 			}
@@ -72,8 +77,8 @@ namespace ForzaData.Core
 			switch (input.Length)
 			{
 				case SledPacketSize: return ForzaDataVersion.Sled;
-				case CarDashPacketSize: return ForzaDataVersion.CarDash;
-				case HorizonCarDashPacketSize: return ForzaDataVersion.HorizonCarDash;
+				case CarDashPacketSize: return ForzaDataVersion.CarDashV1;
+				case HorizonCarDashPacketSize: return ForzaDataVersion.CarDashV2;
 				default: return ForzaDataVersion.Unknown;
 			}
 		}
@@ -197,12 +202,6 @@ namespace ForzaData.Core
 				NormalizedDrivingLine = reader.ReadSByte(),
 				NormalizedAIBrakeDifference = reader.ReadSByte()
 			};
-		}
-
-		private byte[] ReadHorizonCarDashData(BinaryReader reader)
-		{
-			int length = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-			return reader.ReadBytes(length);
 		}
 	}
 }

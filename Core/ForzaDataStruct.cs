@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
 namespace ForzaData.Core
 {
 	/// <summary>
-	/// Forza Horizon 4 / Forza Motorsport 7 Data Out structure
+	/// Forza Data Out structure
 	/// </summary>
+	[StructLayout(LayoutKind.Auto)]
 	public struct ForzaDataStruct
 	{
 		/// <summary>
@@ -25,8 +24,13 @@ namespace ForzaData.Core
 		public ForzaCarDashDataStruct? CarDash;
 
 		/// <summary>
-		/// Horizon specific car dash data
+		/// Horizon extras data
 		/// </summary>
-		public byte[] HorizonCarDash;
+		public ForzaHorizonExtrasDataStruct? HorizonExtras;
+
+		/// <summary>
+		/// Motorsport extras data
+		/// </summary>
+		public ForzaMotorsportExtrasDataStruct? MotorsportExtras;
 	}
 }

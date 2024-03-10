@@ -88,7 +88,7 @@ namespace ForzaData.Core
 			internal static readonly Range NumCylinders = 228..232;
 		}
 
-		private ForzaSledDataStruct ReadSledData(in ReadOnlySpan<byte> data) => new ForzaSledDataStruct
+		private static ForzaSledDataStruct ReadSledData(in ReadOnlySpan<byte> data) => new()
 		{
 			IsRaceOn = BitConverter.ToInt32(data[SledMap.IsRaceOn]),
 
