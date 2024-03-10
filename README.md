@@ -1,11 +1,13 @@
 # Forza Data Web (_Work in progress_)
-Forza Motorsport 7 / Horizon 4 Data-Out feature receiver web application, and some debug tools.
 
-Based on [Turn10 official specifications here](https://forums.forzamotorsport.net/turn10_postst128499_Forza-Motorsport-7--Data-Out--feature-details.aspx).
+Forza Motorsport and Horizon Data-Out feature receiver web application, and some debug tools.
+
+Based on Turn10 official documentation:
+https://support.forzamotorsport.net/hc/en-us/articles/21742934024211-Forza-Motorsport-Data-Out-Documentation
 
 ## Objectives
 
-The idea behind this Web Application is to provide access to Forza Motorsport 7 or Forza Horizon 4 telemetry of a game session to Web users.
+The idea behind this Web Application was to provide web visitor access to Forza Motorsport or Forza Horizon telemetry from live, or recorded, game session.
 
 Game data reading is made by a Web backend, parsed and routed via WebSocket to an rich UI Web Interface to provide real-time data on a game session.
 
@@ -17,16 +19,18 @@ For the moment, game data can be observed using a simple console.
 
 Samples can be recorded using the sample recorder program, and will be playable later.
 
-No Web interface for the moment.
+No Web interface for the moment, only a placeholder razor app.
 
 ## Protocol compatibility
 
-| Game               | Sled     | Car Dash | _Horizon_ |
-|--------------------|----------|----------|-----------|
-| Forza Motorsport 7 | Yes      | Yes      | N/A       |
-| Forza Horizon 4    | Yes      | Yes      | No*       |
+| Game                    | Sled     | Car Dash | Horizon specific | Motorsport specific |
+|-------------------------|----------|----------|------------------|---------------------|
+| Forza Motorsport 7      | Yes      | Yes      | N/A              | N/A                 |
+| Forza Horizon 4         | Yes      | Yes      | Partial *        | N/A                 |
+| Forza Horizon 5         | Yes      | Yes      | Partial *        | N/A                 |
+| Forza Motorsport (2023) | Yes      | Yes      | N/A              | Yes                 |
 
-_*_ Forza Horizon 4 is emitting 13 additional bytes. Only these are ignored.
+_* Forza Horizon specific data is not documented. Only the car category (from community assumptions) is decoded, so thanks to them !_
 
 ## How to test
 
@@ -34,8 +38,7 @@ _*_ Forza Horizon 4 is emitting 13 additional bytes. Only these are ignored.
 
 1. [Git](https://www.git-scm.com/downloads)
 2. [Git LFS](https://git-lfs.github.com)
-1. [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet)
-
+3. [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet)
 
 ### Get sources
 
@@ -44,16 +47,18 @@ You will need to install Git LFS before cloning the repository to get large samp
 
 ### Enable Data-Out feature in game
 
-Start Forza Motorsport 7 or Forza Horizon 4 on your Windows 10 computer or your Xbox.
-Go to game options, then _HUD_ options. At the bottom of the screen :
+> **Note for Windows as both game and receiving app**:
+> Only Forza Motorsport (2023) allows to send data to 127.0.0.1.
+> For earlier games you will need a separate compute to receive the data.
+
+Start the game on your Windows computer or your Xbox.
+Go to game options and look for _Data Out_ options :
 1. `Data Out IP Address` : enter the IP Address of **the computer that will run the console program**
 2. `Data Out IP Port` : enter the network port you want to **listen on this computer** (1024 to 65535)
-3. `Data Out Packet Format` : choose **Sled** or **Car Dash**, but you will get more data using Car Dash format. Forza Horizon 4 does not have this option.
+3. `Data Out Packet Format` : choose **Sled** or **Car Dash**. You will get more data using Car Dash, if available.
 4. `Data Out` : set to **ON**
 
 ### Run console program
-
-If you're playing on a Windows computer, you have to use another computer to run the console program, or you will receive nothing.
 
 Launch your command line to `Console` source directory.
 Then run this command:

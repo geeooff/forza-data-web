@@ -9,7 +9,7 @@ namespace ForzaData.Core
 		/// </summary>
 		/// <remarks>
 		/// Indexes are not absolute, they are relative to the data offset.
-		/// See <see cref="CarDashRange"/> and <see cref="HorizonCarDashRange"/> for info.
+		/// See <see cref="CarDashRange"/> and <see cref="CarDashAfterHorizonExtrasRange"/> for info.
 		/// </remarks>
 		internal static class CarDashMap
 		{
@@ -17,7 +17,7 @@ namespace ForzaData.Core
 			internal static readonly Range PositionY = 4..8;
 			internal static readonly Range PositionZ = 8..12;
 
-			internal static readonly Range Speed = 12..18;
+			internal static readonly Range Speed = 12..16;
 			internal static readonly Range Power = 16..20;
 			internal static readonly Range Torque = 20..24;
 
@@ -48,7 +48,7 @@ namespace ForzaData.Core
 			internal static readonly Index NormalizedAIBrakeDifference = 78;
 		}
 
-		private ForzaCarDashDataStruct ReadCarDashData(in ReadOnlySpan<byte> data) => new ForzaCarDashDataStruct
+		private static ForzaCarDashDataStruct ReadCarDashData(in ReadOnlySpan<byte> data) => new()
 		{
 			PositionX = BitConverter.ToSingle(data[CarDashMap.PositionX]),
 			PositionY = BitConverter.ToSingle(data[CarDashMap.PositionY]),

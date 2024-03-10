@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace ForzaData.Core
 {
 	/// <summary>
 	/// "Car dash" data structure
 	/// </summary>
+	[StructLayout(LayoutKind.Auto)]
 	public struct ForzaCarDashDataStruct
 	{
 		//Position (meters)
