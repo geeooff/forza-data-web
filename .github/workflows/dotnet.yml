@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - develop
-      - master
       - main
       - 'feature/*'
       - 'release/*'
@@ -17,8 +16,8 @@ on:
   pull_request:
     branches:
       - develop
-      - master
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -39,4 +38,10 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal --results-directory TestResults --logger html --logger trx
+    - name: Test results upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: TestResults
+      if: ${{ always() }}
