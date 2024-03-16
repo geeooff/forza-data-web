@@ -1,6 +1,7 @@
 ﻿using ForzaData.Core;
 using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace ForzaData.Console
 {
@@ -19,7 +20,7 @@ namespace ForzaData.Console
 ║                      │ Boost  XXXX.XX bar  │ Race        XXX:XX:XX,XXX ║
 ╟──────────────────────┴─────────────────────┴─────┬─────────────────────╢
 ║                 X(right)       Y(up)  Z(forward) │ Accelerator   XXX % ║
-║ Acceleration   XXX.XX  G   XXX.XX  G   XXX.XX  G │ Brake         XXX % ║
+║ Acceleration  XXXX.XX  G  XXXX.XX  G  XXXX.XX  G │ Brake         XXX % ║
 ║ Velocity      XXXX.X m/s  XXXX.X m/s  XXXX.X m/s │ Clutch        XXX % ║
 ╟──────────────────────────────────────────────────┤ Handbrake     XXX % ║
 ║                      Yaw       Pitch        Roll │ Gear           XX   ║
@@ -37,8 +38,8 @@ namespace ForzaData.Console
 		private const ConsoleColor DefaultGearNeutralColor = ConsoleColor.Yellow;
 		private const ConsoleColor DefaultGearDriveColor = ConsoleColor.Green;
 		private const ConsoleColor DefaultGearReverseColor = ConsoleColor.Red;
-		private const double PsiToBarDivisor = 14.503773773022;
-		private const double StandardGravity = 9.80665; // m/s²
+		private const float PsiToBarDivisor = 14.503773773022f;
+		private const float StandardGravity = 9.80665f; // m/s²
 
 		public ForzaDataConsole()
 		{
@@ -134,14 +135,14 @@ namespace ForzaData.Console
 				ConsoleWriteAt(12, 6, $"{sd.EngineMaxRpm,6:0}", 6);
 
 				// acceleration, m/s² -> Gs
-				ConsoleWriteAt(17, 10, $"{sd.AccelerationX / StandardGravity,6:'← '0.00;'→ '0.00;0.00}", 6);
-				ConsoleWriteAt(29, 10, $"{sd.AccelerationY / StandardGravity,6:'↓ '0.00;'↑ '0.00;0.00}", 6);
-				ConsoleWriteAt(41, 10, $"{sd.AccelerationZ / StandardGravity,6:'↓ '0.00;'↑ '0.00;0.00}", 6);
+				ConsoleWriteAt(16, 10, $"{sd.AccelerationX / StandardGravity,7:'◄ '#0.00;'► '#0.00;0.00}", 7);
+				ConsoleWriteAt(28, 10, $"{sd.AccelerationY / StandardGravity,7:'▼ '#0.00;'▲ '#0.00;0.00}", 7);
+				ConsoleWriteAt(40, 10, $"{sd.AccelerationZ / StandardGravity,7:'▼ '#0.00;'▲ '#0.00;0.00}", 7);
 
 				// velocity, m/s
-				ConsoleWriteAt(16, 11, $"{sd.VelocityX,6:'← '0.0;'→ '0.0;0.0}", 6);
-				ConsoleWriteAt(28, 11, $"{sd.VelocityY,6:'↑ '0.0;'↓ '0.0;0.0}", 6);
-				ConsoleWriteAt(40, 11, $"{sd.VelocityZ,6:'↑ '0.0;'↓ '0.0;0.0}", 6);
+				ConsoleWriteAt(16, 11, $"{sd.VelocityX,6:'◄ '##0.0;'► '##0.0;0.0}", 6);
+				ConsoleWriteAt(28, 11, $"{sd.VelocityY,6:'▲ '##0.0;'▼ '##0.0;0.0}", 6);
+				ConsoleWriteAt(40, 11, $"{sd.VelocityZ,6:'▲ '##0.0;'▼ '##0.0;0.0}", 6);
 
 				// position
 				// TODO: need to figure the unit
@@ -183,7 +184,7 @@ namespace ForzaData.Console
 					ConsoleWriteAt(67, 11, $"{cdd.Clutch / 2.55f,3:0}", 3);
 					ConsoleWriteAt(67, 12, $"{cdd.HandBrake / 2.55f,3:0}", 3);
 					ConsoleWriteAt(68, 13, GetGearValue(cdd.Gear), 2, GetGearValueColor(cdd.Gear));
-					ConsoleWriteAt(65, 14, $"{cdd.Steer / 1.27f,5:'→ '0;'← '0;0}", 5);
+					ConsoleWriteAt(65, 14, $"{cdd.Steer / 1.27f,5:'► '##0;'◄ '##0;0}", 5);
 				}
 			}
 		}

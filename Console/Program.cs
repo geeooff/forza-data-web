@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ForzaData.Core;
@@ -22,6 +23,9 @@ namespace ForzaData.Console
 
 		static void Main(string[] args)
 		{
+			// forcing UTF-8 encoding
+			System.Console.OutputEncoding = Encoding.UTF8;
+
 			try
 			{
 				_args = PowArgs.Parser<Arguments>.Parse(args);
