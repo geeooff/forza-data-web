@@ -1,14 +1,32 @@
 ﻿using ForzaData.Core;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace ForzaData.Console
 {
 	public class ForzaDataConsole : ForzaDataObserver
 	{
-		private static readonly object SyncRoot = new object();
+		private static readonly object SyncRoot = new();
+
+		private static readonly string BlankScreen = @"
+╔════════════════════════════════════════════════════════════════════════╗
+║ Car  XXXXXXX    Class XX   Index XXX    Drivetrain XXX   Cylinders  XX ║
+║ Lap     XXXX     Position XXX     Fuel XXX.X %      Distance XXXXXX KM ║
+╟──────────────────────┬─────────────────────┬───────────────────────────╢
+║ Current   XXXXXX RPM │ Speed  XXXXX.X km/h │ Current lap XXX:XX:XX,XXX ║
+║ Idle      XXXXXX RPM │ Power  XXXXX.X kW   │ Last lap    XXX:XX:XX,XXX ║
+║ Maximum   XXXXXX RPM │ Torque XXXXX.X Nm   │ Best lap    XXX:XX:XX,XXX ║
+║                      │ Boost  XXXX.XX bar  │ Race        XXX:XX:XX,XXX ║
+╟──────────────────────┴─────────────────────┴─────┬─────────────────────╢
+║                 X(right)       Y(up)  Z(forward) │ Accelerator   XXX % ║
+║ Acceleration   XXX.XX  G   XXX.XX  G   XXX.XX  G │ Brake         XXX % ║
+║ Velocity      XXXX.X m/s  XXXX.X m/s  XXXX.X m/s │ Clutch        XXX % ║
+╟──────────────────────────────────────────────────┤ Handbrake     XXX % ║
+║                      Yaw       Pitch        Roll │ Gear           XX   ║
+║ Position     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX │ Steer         XXX % ║
+║ Ang.Velocity XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX │                     ║
+╚══════════════════════════════════════════════════╧═════════════════════╝
+".Trim();
 
 		private const ConsoleColor DefaultValueColor = ConsoleColor.White;
 		private const ConsoleColor DefaultEngineLowRpmColor = ConsoleColor.Green;
@@ -16,6 +34,11 @@ namespace ForzaData.Console
 		private const ConsoleColor DefaultEngineHighRpmColor = ConsoleColor.Red;
 		private const float DefaultEngineMediumRpmPercent = 0.5f; // percent of maximum rpm
 		private const float DefaultEngineHighRpmPercent = 0.85f; // percent of maximum rpm
+		private const ConsoleColor DefaultGearNeutralColor = ConsoleColor.Yellow;
+		private const ConsoleColor DefaultGearDriveColor = ConsoleColor.Green;
+		private const ConsoleColor DefaultGearReverseColor = ConsoleColor.Red;
+		private const double PsiToBarDivisor = 14.503773773022;
+		private const double StandardGravity = 9.80665; // m/s²
 
 		public ForzaDataConsole()
 		{
@@ -28,6 +51,11 @@ namespace ForzaData.Console
 		public virtual ConsoleColor EngineHighRpmColor { get; set; } = DefaultEngineHighRpmColor;
 		public virtual float EngineMediumRpmPercent { get; set; } = DefaultEngineMediumRpmPercent;
 		public virtual float EngineHighRpmPercent { get; set; } = DefaultEngineHighRpmPercent;
+		public virtual ConsoleColor GearNeutralColor { get; set; } = DefaultGearNeutralColor;
+		public virtual ConsoleColor GearDriveColor { get; set; } = DefaultGearDriveColor;
+		public virtual ConsoleColor GearReverseColor { get; set; } = DefaultGearReverseColor;
+
+		private ForzaDataStruct? previousData;
 
 		public override void OnCompleted()
 		{
@@ -48,7 +76,23 @@ namespace ForzaData.Console
 
 		public override void OnNext(ForzaDataStruct value)
 		{
+			if (ShouldResetUI(value))
+				InitializeUI();
+
 			UpdateUI(value);
+
+			previousData = value;
+		}
+
+		protected virtual bool ShouldResetUI(ForzaDataStruct data)
+		{
+			if (!previousData.HasValue)
+				return false;
+
+			// the UI should clean old values when data version has changed
+			// or when race is paused/resumed
+			return (previousData.Value.Version != data.Version)
+			    || (previousData.Value.Sled.IsRaceOn != data.Sled.IsRaceOn);
 		}
 
 		protected virtual void InitializeUI()
@@ -59,21 +103,7 @@ namespace ForzaData.Console
 				System.Console.CursorTop = 0;
 				System.Console.CursorLeft = 0;
 				System.Console.CursorVisible = false;
-
-				System.Console.WriteLine("Race XXX Car XXXXXXXXXXX Class X Index XXX Drivetrain XXX Cylinders XX");
-				System.Console.WriteLine("Lap XXX Position XX Fuel XXXXX % Distance XXXXX KM Race X.XX:XX:XX.XXX");
-				System.Console.WriteLine();
-				System.Console.WriteLine("Current XXXXX RPM   Speed  XXXXX.X KPH   Cur. lap X.XX:XX:XX.XXX");
-				System.Console.WriteLine("Idle    XXXXX RPM   Power  XXXXX.X KW    Last lap X.XX:XX:XX.XXX");
-				System.Console.WriteLine("Maximum XXXXX RPM   Torque XXXXX.X Nm    Best lap X.XX:XX:XX.XXX");
-				System.Console.WriteLine();
-				System.Console.WriteLine("                X(right)       Y(up)  Z(forward)   Accelerator XXX %");
-				System.Console.WriteLine("Acceleration XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Brake       XXX %");
-				System.Console.WriteLine("Velocity     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Clutch      XXX %");
-				System.Console.WriteLine("                                                   Handbrake   XXX %");
-				System.Console.WriteLine("                     Yaw       Pitch        Roll   Gear        XXX");
-				System.Console.WriteLine("Position     XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX   Steer       XXX %");
-				System.Console.WriteLine("Ang.Velocity XXXXXXXXXXX XXXXXXXXXXX XXXXXXXXXXX");
+				System.Console.Write(BlankScreen);
 			}
 		}
 
@@ -83,114 +113,123 @@ namespace ForzaData.Console
 
 			lock (SyncRoot)
 			{
-				// line 1
-				ConsoleWriteAt(5, 0, GetRaceIsOneValue(sd.IsRaceOn), 3, GetRaceIsOneValueColor(sd.IsRaceOn));
-				ConsoleWriteAt(13, 0, $"{sd.CarOrdinal,11:##0}", 11);
-				ConsoleWriteAt(31, 0, "DCBASRPX"[sd.CarClass].ToString(), 1);
-				ConsoleWriteAt(39, 0, $"{sd.CarPerformanceIndex,3:##0}", 3);
-				ConsoleWriteAt(54, 0, GetDriveTrainValue(sd.DrivetrainType), 3);
-				ConsoleWriteAt(68, 0, string.Format("{0:#0}", sd.NumCylinders), 2);
+				// race on/off
+				string raceIsOnValue = ' ' + GetRaceIsOneValue(sd.IsRaceOn) + ' ';
+				ConsoleWriteAt(3, 0, raceIsOnValue, raceIsOnValue.Length, GetRaceIsOneValueColor(sd.IsRaceOn));
 
-				// engine
-				ConsoleWriteAt(8, 3, $"{sd.CurrentEngineRpm,5:####0}", 5, GetCurrentEngineRpmValueColor(sd.CurrentEngineRpm, sd.EngineIdleRpm, sd.EngineMaxRpm));
-				ConsoleWriteAt(8, 4, $"{sd.EngineIdleRpm,5:####0}", 5);
-				ConsoleWriteAt(8, 5, $"{sd.EngineMaxRpm,5:####0}", 5);
+				// we don't display any other value if race is not on
+				if (sd.IsRaceOn == 0)
+					return;
 
-				// acceleration
-				ConsoleWriteAt(13, 8, $"{sd.AccelerationX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 8, $"{sd.AccelerationY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 8, $"{sd.AccelerationZ,11:###0.000000}", 11);
+				// header, line 1
+				ConsoleWriteAt(7, 1, $"{sd.CarOrdinal,7:0}", 7);
+				ConsoleWriteAt(24, 1, GetCarClassValue(sd.CarClass, sd.CarPerformanceIndex) ?? "XX", 2);
+				ConsoleWriteAt(35, 1, $"{sd.CarPerformanceIndex,3:0}", 3);
+				ConsoleWriteAt(53, 1, GetDriveTrainValue(sd.DrivetrainType), 3);
+				ConsoleWriteAt(70, 1, $"{sd.NumCylinders,2:0}", 2);
 
-				// velocity
-				ConsoleWriteAt(13, 9, $"{sd.VelocityX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 9, $"{sd.VelocityY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 9, $"{sd.VelocityZ,11:###0.000000}", 11);
+				// engine, rotation per minute
+				ConsoleWriteAt(12, 4, $"{sd.CurrentEngineRpm,6:0}", 6, GetCurrentEngineRpmValueColor(sd.CurrentEngineRpm, sd.EngineMaxRpm));
+				ConsoleWriteAt(12, 5, $"{sd.EngineIdleRpm,6:0}", 6);
+				ConsoleWriteAt(12, 6, $"{sd.EngineMaxRpm,6:0}", 6);
 
-				// angle
-				ConsoleWriteAt(13, 12, $"{sd.Yaw,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 12, $"{sd.Pitch,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 12, $"{sd.Roll,11:###0.000000}", 11);
+				// acceleration, m/s² -> Gs
+				ConsoleWriteAt(17, 10, $"{sd.AccelerationX / StandardGravity,6:'← '0.00;'→ '0.00;0.00}", 6);
+				ConsoleWriteAt(29, 10, $"{sd.AccelerationY / StandardGravity,6:'↓ '0.00;'↑ '0.00;0.00}", 6);
+				ConsoleWriteAt(41, 10, $"{sd.AccelerationZ / StandardGravity,6:'↓ '0.00;'↑ '0.00;0.00}", 6);
+
+				// velocity, m/s
+				ConsoleWriteAt(16, 11, $"{sd.VelocityX,6:'← '0.0;'→ '0.0;0.0}", 6);
+				ConsoleWriteAt(28, 11, $"{sd.VelocityY,6:'↑ '0.0;'↓ '0.0;0.0}", 6);
+				ConsoleWriteAt(40, 11, $"{sd.VelocityZ,6:'↑ '0.0;'↓ '0.0;0.0}", 6);
+
+				// position
+				// TODO: need to figure the unit
+				ConsoleWriteAt(15, 14, $"{sd.Yaw,11:0.000000}", 11);
+				ConsoleWriteAt(27, 14, $"{sd.Pitch,11:0.000000}", 11);
+				ConsoleWriteAt(39, 14, $"{sd.Roll,11:0.000000}", 11);
 
 				// angular velocity
-				ConsoleWriteAt(13, 13, $"{sd.AngularVelocityX,11:###0.000000}", 11);
-				ConsoleWriteAt(25, 13, $"{sd.AngularVelocityY,11:###0.000000}", 11);
-				ConsoleWriteAt(37, 13, $"{sd.AngularVelocityZ,11:###0.000000}", 11);
+				// TODO: need to figure the unit
+				ConsoleWriteAt(15, 15, $"{sd.AngularVelocityX,11:0.000000}", 11);
+				ConsoleWriteAt(27, 15, $"{sd.AngularVelocityY,11:0.000000}", 11);
+				ConsoleWriteAt(39, 15, $"{sd.AngularVelocityZ,11:0.000000}", 11);
 
 				if (data.CarDash.HasValue)
 				{
 					ForzaCarDashDataStruct cdd = data.CarDash.Value;
 
-					// line 2
-					ConsoleWriteAt(4, 1, $"{cdd.LapNumber + 1}", 3);
-					ConsoleWriteAt(17, 1, $"{cdd.RacePosition}", 2);
-					ConsoleWriteAt(25, 1, $"{cdd.Fuel * 100f,5:##0.0}", 5);
-					ConsoleWriteAt(42, 1, $"{cdd.DistanceTraveled / 1000f,5:##0.0}", 5);
-					ConsoleWriteAt(56, 1, GetRaceTimeValue(cdd.CurrentRaceTime), 14);
+					// header, line 2
+					ConsoleWriteAt(10, 2, $"{cdd.LapNumber + 1}", 4);
+					ConsoleWriteAt(28, 2, $"{cdd.RacePosition}", 3);
+					ConsoleWriteAt(41, 2, $"{cdd.Fuel * 100f,5:0.0}", 5);
+					ConsoleWriteAt(63, 2, $"{cdd.DistanceTraveled / 1000f,6:0.0}", 6);
 
-					// speed, power, torque
-					ConsoleWriteAt(27, 3, $"{cdd.Speed * 3.6f,7:####0.0}", 7);
-					ConsoleWriteAt(27, 4, $"{cdd.Power / 1000f,7:####0.0}", 7);
-					ConsoleWriteAt(27, 5, $"{cdd.Torque,7:####0.0}", 7);
+					// speed (m/s -> km/h), power (watts -> killowatts), torque (newton-meter), boost (psi -> bar)
+					ConsoleWriteAt(32, 4, $"{cdd.Speed * 3.6f,7:0.0}", 7);
+					ConsoleWriteAt(32, 5, $"{cdd.Power / 1000f,7:0.0}", 7);
+					ConsoleWriteAt(32, 6, $"{cdd.Torque,7:0.0}", 7);
+					ConsoleWriteAt(32, 7, $"{cdd.Boost / PsiToBarDivisor,7:0.00}", 7);
 
-					// laps
-					ConsoleWriteAt(50, 3, GetRaceTimeValue(cdd.CurrentLap), 14);
-					ConsoleWriteAt(50, 4, GetRaceTimeValue(cdd.LastLap), 14);
-					ConsoleWriteAt(50, 5, GetRaceTimeValue(cdd.BestLap), 14);
+					// times
+					ConsoleWriteAt(59, 4, GetRaceTimeValue(cdd.CurrentLap), 13);
+					ConsoleWriteAt(59, 5, GetRaceTimeValue(cdd.LastLap), 13);
+					ConsoleWriteAt(59, 6, GetRaceTimeValue(cdd.BestLap), 13);
+					ConsoleWriteAt(59, 7, GetRaceTimeValue(cdd.CurrentRaceTime), 13);
 
-					// controls
-					ConsoleWriteAt(63, 7, $"{cdd.Accel / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 8, $"{cdd.Brake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 9, $"{cdd.Clutch / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 10, $"{cdd.HandBrake / 2.55f,3:##0}", 3);
-					ConsoleWriteAt(63, 11, $"{cdd.Gear,3:##0}", 3);
-					ConsoleWriteAt(62, 12, $"{cdd.Steer / 1.27f,3:+0;-0;0}", 4); 
+					// controls, in percentages
+					ConsoleWriteAt(67, 9, $"{cdd.Accel / 2.55f,3:0}", 3);
+					ConsoleWriteAt(67, 10, $"{cdd.Brake / 2.55f,3:0}", 3);
+					ConsoleWriteAt(67, 11, $"{cdd.Clutch / 2.55f,3:0}", 3);
+					ConsoleWriteAt(67, 12, $"{cdd.HandBrake / 2.55f,3:0}", 3);
+					ConsoleWriteAt(68, 13, GetGearValue(cdd.Gear), 2, GetGearValueColor(cdd.Gear));
+					ConsoleWriteAt(65, 14, $"{cdd.Steer / 1.27f,5:'→ '0;'← '0;0}", 5);
 				}
 			}
 		}
 
-		protected virtual string GetRaceIsOneValue(int isRaceOn)
+		protected virtual string GetRaceIsOneValue(int isRaceOn) => isRaceOn switch
 		{
-			return (isRaceOn == 1) ? " ON" : "OFF";
-		}
+			0 => "PAUSE",
+			1 => "RACE",
+			_ => "???"
+		};
 
-		protected virtual ConsoleColor GetRaceIsOneValueColor(int isRaceOn)
-		{
-			return (isRaceOn == 1) ? ConsoleColor.Green : ConsoleColor.Red;
-		}
+		protected virtual ConsoleColor GetRaceIsOneValueColor(int isRaceOn) => isRaceOn == 0
+			? ConsoleColor.Red
+			: ConsoleColor.Green;
 
-		protected virtual string GetDriveTrainValue(int driveTrainType)
+		protected virtual string GetDriveTrainValue(int driveTrainType) => driveTrainType switch
 		{
-			switch (driveTrainType)
-			{
-				case 0: return "FWD";
-				case 1: return "RWD";
-				case 2: return "AWD";
-				default: return "   ";
-			}
-		}
+			0 => "FWD",
+			1 => "RWD",
+			2 => "AWD",
+			_ => string.Empty
+		};
 
 		protected virtual string GetRaceTimeValue(float time)
 		{
-			TimeSpan ts = TimeSpan.FromSeconds(time);
+			TimeSpan timeSpan = TimeSpan.FromSeconds(time);
 
-			string format = ts.Days > 0
-				? "d'.'hh':'mm':'ss'.'fff"
-				: ts.Hours > 0
-					? "hh':'mm':'ss'.'fff"
-					: ts.Minutes > 0
-						? "mm':'ss'.'fff"
-						: "ss'.'fff";
+			string timeString = timeSpan.ToString("mm':'ss','fff");
 
-			return ts.ToString(format).TrimStart('0');
+			if (timeSpan.TotalHours >= 1d)
+			{
+				ushort totalHours = (ushort)Math.Floor(timeSpan.TotalHours);
+				string hoursString = totalHours.ToString("000").TrimStart('0');
+				timeString = string.Concat(hoursString, ':', timeString);
+			}
+
+			return timeString;
 		}
 
-		protected virtual ConsoleColor GetCurrentEngineRpmValueColor(float currentEngineRpm, float engineIdleRpm, float engineMaxRpm)
+		protected virtual ConsoleColor GetCurrentEngineRpmValueColor(float currentEngineRpm, float engineMaxRpm)
 		{
-			if (engineIdleRpm == 0f || engineMaxRpm == 0f)
+			if (engineMaxRpm == 0f)
 				return ValueColor;
 
-			float mediumRpmBound = (engineMaxRpm * EngineMediumRpmPercent);
-			float highRpmBound = (engineMaxRpm * EngineHighRpmPercent);
+			float mediumRpmBound = engineMaxRpm * EngineMediumRpmPercent;
+			float highRpmBound = engineMaxRpm * EngineHighRpmPercent;
 
 			if (currentEngineRpm < mediumRpmBound)
 			{
@@ -206,6 +245,26 @@ namespace ForzaData.Console
 			}
 		}
 
+		protected virtual string GetGearValue(byte value) => value switch
+		{
+			0 => "R",
+			11 => "N",
+			_ => value.ToString("0")
+		};
+
+		protected virtual ConsoleColor GetGearValueColor(byte value) => value switch
+		{
+			0 => GearReverseColor,
+			11 => GearNeutralColor,
+			_ => GearDriveColor
+		};
+
+		protected virtual string GetCarClassValue(int carClass, int carPerformance)
+			=> CarClasses.GetCarClassCode(carClass, carPerformance);
+
+		protected void ConsoleWriteAt(int left, int top, char value, ConsoleColor? color = null)
+			=> ConsoleWriteAt(left, top, value.ToString(), 1, color);
+
 		protected void ConsoleWriteAt(int left, int top, string value, int length, ConsoleColor? color = null)
 		{
 			int bufferHeight = System.Console.BufferHeight;
@@ -217,13 +276,13 @@ namespace ForzaData.Console
 
 			System.Console.SetCursorPosition(left, top);
 
-			int availableChars = Math.Min(length, (bufferWidth - left));
+			int availableChars = Math.Min(length, bufferWidth - left);
 			if (value.Length > availableChars)
 			{
 				Debug.WriteLine($"Substring occured on value \"{value}\" because of {availableChars} available chars");
 
 				// substring value according buffer width or value max length
-				value = value.Substring(0, availableChars);
+				value = value[..availableChars];
 			}
 			else if (value.Length < availableChars)
 			{
