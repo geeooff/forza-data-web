@@ -18,7 +18,7 @@ public static class CarClasses
 			_ => false
 		};
 
-		internal static string GetMotorsportCarClassCode(int carClass) => carClass switch
+		internal static string? GetMotorsportCarClassCode(int carClass) => carClass switch
 		{
 			0 => "E",
 			1 => "D",
@@ -47,7 +47,7 @@ public static class CarClasses
 			_ => false
 		};
 
-		internal static string GetHorizonCarClassCode(int carClass) => carClass switch
+		internal static string? GetHorizonCarClassCode(int carClass) => carClass switch
 		{
 			0 => "D",
 			1 => "C",
@@ -60,9 +60,9 @@ public static class CarClasses
 		};
 	}
 
-	public static string GetCarClassCode(int carClass, int carPerformance)
+	public static string? GetCarClassCode(int carClass, int carPerformance)
 	{
-		string carClassCode = null;
+		string? carClassCode = null;
 
 		if (Motorsport.IsMotorsportCarClass(carClass, carPerformance))
 			carClassCode = Motorsport.GetMotorsportCarClassCode(carClass);

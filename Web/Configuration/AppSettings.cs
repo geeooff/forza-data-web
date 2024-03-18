@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace ForzaData.Web.Configuration;
 
-namespace Receiver.Configuration
+public class AppSettings
 {
-    public class AppSettings
-    {
-		public AppSettings()
-		{
-			UdpPort = 7777;
-		}
-
-		public int UdpPort { get; set; }
-	}
+	public int UdpPort { get; set; } = 7777;
 }

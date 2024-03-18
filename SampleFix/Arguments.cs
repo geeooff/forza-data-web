@@ -1,29 +1,24 @@
-﻿using ForzaData.Core;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿using PowArgs.Attributes;
 
-namespace ForzaData.SampleFrequencyFix
+namespace ForzaData.SampleFix;
+
+public class Arguments
 {
-	public class Arguments
-	{
-		[PowArgs.Attributes.Argument("Use constant 60 Hz to resynchronize sample")]
-		public bool UseStaticFrequency { get; set; } = false;
+	[Argument("Use constant 60 Hz to resynchronize sample")]
+	public bool UseStaticFrequency { get; set; } = false;
 
-		[PowArgs.Attributes.Argument("Use forza data's decoded timestamps to resynchronize (recommended)")]
-		public bool UseTimestamp { get; set; } = false;
+	[Argument("Use forza data's decoded timestamps to resynchronize (recommended)")]
+	public bool UseTimestamp { get; set; } = false;
 
-		[PowArgs.Attributes.Argument("Ignores invalid chunks (not increasing / not parsable)")]
-		public bool IgnoreInvalidChunks { get; set; } = false;
+	[Argument("Ignores invalid chunks (not increasing / not parsable)")]
+	public bool IgnoreInvalidChunks { get; set; } = false;
 
-		[PowArgs.Attributes.Argument("Input file", required: true)]
-		public string Input { get; set; }
+	[Argument("Input file", required: true)]
+	public string? Input { get; set; }
 
-		[PowArgs.Attributes.Argument("Output file", required: true)]
-		public string Output { get; set; }
+	[Argument("Output file", required: true)]
+	public string? Output { get; set; }
 
-		[PowArgs.Attributes.Argument("Show this program arguments help")]
-		public bool Help { get; set; } = false;
-	}
+	[Argument("Show this program arguments help")]
+	public bool Help { get; set; } = false;
 }

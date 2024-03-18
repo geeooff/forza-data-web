@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
-namespace ForzaData.Core
+namespace ForzaData.Core;
+
+/// <summary>
+/// Samples structure
+/// </summary>
+[StructLayout(LayoutKind.Auto)]
+public struct SampleStruct
 {
 	/// <summary>
-	/// Samples structure
+	/// Ticks elapsed since the record's beginning
 	/// </summary>
-	public struct SampleStruct
-	{
-		/// <summary>
-		/// Ticks elapsed since the record's beginning
-		/// </summary>
-		public long Elapsed;
+	public long Elapsed;
 
-		/// <summary>
-		/// Length of <see cref="Data"/>
-		/// </summary>
-		public int Length;
+	/// <summary>
+	/// Length of <see cref="Data"/>
+	/// </summary>
+	public int Length;
 
-		/// <summary>
-		/// Data chunk
-		/// </summary>
-		public byte[] Data;
-	}
+	/// <summary>
+	/// Data chunk
+	/// </summary>
+	public byte[] Data;
 }
