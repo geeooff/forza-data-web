@@ -1,6 +1,4 @@
-﻿using ForzaData.Core;
-using ForzaData.Web.Configuration;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using ForzaData.Web.Configuration;
 
 namespace ForzaData.Web;
 

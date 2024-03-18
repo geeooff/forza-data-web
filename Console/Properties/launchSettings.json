@@ -2,7 +2,7 @@
   "profiles": {
     "ForzaData.Console": {
       "commandName": "Project",
-      "commandLineArgs": "-ServerIpAddress 192.168.0.10 -Port 7777"
+      "commandLineArgs": "--server 192.168.0.100 --port 7777"
     }
   }
 }

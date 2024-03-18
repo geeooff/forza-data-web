@@ -12,8 +12,8 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/Console/bin/Debug/net8.0/ForzaData.Console.dll",
             "args": [
-                "-ServerIpAddress", "${input:serverIpAddress}",
-                "-Port", "${input:clientPortNumber}"
+                "--server", "${input:serverIpAddress}",
+                "--port", "${input:clientPortNumber}"
             ],
             "cwd": "${workspaceFolder}/Console",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

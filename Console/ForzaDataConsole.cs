@@ -1,7 +1,4 @@
-﻿using ForzaData.Core;
-using System.Diagnostics;
-
-namespace ForzaData.Console;
+﻿namespace ForzaData.Console;
 
 public class ForzaDataConsole : ForzaDataObserver
 {

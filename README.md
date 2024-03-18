@@ -63,15 +63,15 @@ Go to game options and look for _Data Out_ options :
 Launch your command line to `Console` source directory.
 Then run this command:
 ```
-dotnet run -ServerIpAddress <serverIpAddress> -Port <port>
+dotnet run --server <serverIpAddress> --port <port>
 ```
 
-- `-ServerIpAddress` : the IP Address of your Xbox or Computer that runs the game.
-- `-Port` : the network port you chose in-game
+- `-s` / `--server` : the IP Address of your Xbox or Computer that runs the game.
+- `-p` / `--port` : the network port you chose in-game
 
-For example, if your Xbox or Windows Game Computer have 192.168.0.10 IP Address, and you chose 7777 network port to communicate:
+For example, if your Xbox or Windows Game Computer have 192.168.0.100 IP Address, and you chose 7777 network port to communicate:
 ```
-dotnet run -ServerIpAddress 192.168.0.10 -Port 7777
+dotnet run --server 192.168.0.100 --port 7777
 ```
 
 _Note_ : If you want to quit the console program, just hit `CTRL+C` or `CTRL+Break`.
@@ -81,18 +81,18 @@ _Note_ : If you want to quit the console program, just hit `CTRL+C` or `CTRL+Bre
 Launch your command line to `SampleRecorder` source directory.
 Then run this command:
 ```
-dotnet run -ServerIpAddress <serverIpAddress> -Port <port> -Output <file>
+dotnet run --server <serverIpAddress> --port <port> --output <file>
 ```
 
 **Arguments**
 
-- `-ServerIpAddress` : the IP Address of your Xbox or Computer that runs the game.
-- `-Port` : the network port you chose in-game
-- `-Output` : the output file to record to
+- `-s` or `--server` : the IP Address of your Xbox or Computer that runs the game.
+- `-p` or `--port` : the network port you chose in-game
+- `-o` or `--output` : the output file to record to
 
 **Example**
 ```
-dotnet run -ServerIpAddress 192.168.0.10 -Port 7777 -Output "Samples\Sample.bin"
+dotnet run --server 192.168.0.100 --port 7777 --output sample.bin
 ```
 
 _Note_ : If you want to quit the recorder program, just hit `CTRL+C` or `CTRL+Break`.

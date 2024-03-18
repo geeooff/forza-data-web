@@ -33,9 +33,11 @@ public class UdpStreamSampleRecorder(Stream output) : UdpStreamObserver, IDispos
 			_stopwatch.Start();
 		}
 
+		BytesRead += value.Length;
+
 		_writer.Write(elapsed);			BytesWritten += 8;				// 8 bytes
 		_writer.Write(value.Length);	BytesWritten += 4;				// 4 bytes
-		_writer.Write(value);			BytesWritten += value.Length;	// n bytes
+		_writer.Write(value);			BytesWritten += value.Length;   // n bytes
 	}
 
 	protected virtual void Dispose(bool isDisposing)
@@ -44,6 +46,7 @@ public class UdpStreamSampleRecorder(Stream output) : UdpStreamObserver, IDispos
 		{
 			if (isDisposing)
 			{
+				_writer.Close();
 				_writer.Dispose();
 			}
 
