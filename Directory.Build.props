@@ -1,7 +1,37 @@
 <Project>
+
 	<PropertyGroup>
-        <RestoreLockedMode>true</RestoreLockedMode>
+    	<Version>0.8</Version>
+		<Authors>Geoffrey Vancoetsem</Authors>
+		<Company></Company>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
+		<Product>ForzaDataWeb</Product>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>       
+	</PropertyGroup>
+
+    <PropertyGroup>
+        <LangVersion>12.0</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+    	<RestoreLockedMode>true</RestoreLockedMode>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+        <RuntimeIdentifiers>win-x64;osx-x64;linux-x64</RuntimeIdentifiers>
+        <PublishRelease>true</PublishRelease>
+        <PublishReadyToRun>true</PublishReadyToRun>
+		<PublishTrimmed>true</PublishTrimmed>
+        <PublishSingleFile>true</PublishSingleFile>
+        <PublishSelfContained>true</PublishSelfContained>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+  		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
 </Project>

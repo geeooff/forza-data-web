@@ -1,67 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Receiver.Configuration;
-using Receiver.Services;
+﻿using ForzaData.Core;
+using ForzaData.Web.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Receiver
+namespace ForzaData.Web;
+
+public class Startup(IConfiguration configuration)
 {
-	public class Startup
+	public IConfiguration Configuration { get; } = configuration;
+
+	public void ConfigureServices(IServiceCollection services)
 	{
-		public Startup(IConfiguration configuration)
+		services.Configure<CookiePolicyOptions>(options =>
 		{
-			Configuration = configuration;
+			options.CheckConsentNeeded = context => true;
+			options.MinimumSameSitePolicy = SameSiteMode.None;
+		});
+
+		services.Configure<AppSettings>("App", Configuration);
+
+		services.AddControllersWithViews();
+		services.AddRazorPages();
+	}
+
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+	{
+		if (env.IsDevelopment())
+		{
+			app.UseDeveloperExceptionPage();
+		}
+		else
+		{
+			app.UseExceptionHandler("/Home/Error");
+			app.UseHsts();
 		}
 
-		public IConfiguration Configuration { get; }
+		app.UseHttpsRedirection();
+		app.UseStaticFiles();
+		app.UseCookiePolicy();
 
-		public void ConfigureServices(IServiceCollection services)
+		app.UseRouting();
+
+		app.UseEndpoints(endpoints =>
 		{
-			services.Configure<CookiePolicyOptions>(options =>
-			{
-				options.CheckConsentNeeded = context => true;
-				options.MinimumSameSitePolicy = SameSiteMode.None;
-			});
-
-			services.Configure<AppSettings>("App", Configuration);
-
-			services.AddSingleton<ForzaDataListener>();
-
-			services.AddControllersWithViews();
-			services.AddRazorPages();
-		}
-
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
-				app.UseExceptionHandler("/Home/Error");
-				app.UseHsts();
-			}
-
-			app.UseHttpsRedirection();
-			app.UseStaticFiles();
-			app.UseCookiePolicy();
-			
-			app.UseRouting();
-
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-				endpoints.MapRazorPages();
-			});
-		}
+			endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+			endpoints.MapRazorPages();
+		});
 	}
 }

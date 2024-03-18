@@ -1,79 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Text;
 
-namespace ForzaData.Core
+namespace ForzaData.Core;
+
+public class SampleReader(Stream input) : IDisposable
 {
-	public class SampleReader : IDisposable
+	private readonly BinaryReader _reader = new(input, Encoding.UTF8, true);
+
+	private bool _isDisposed = false;
+
+	public int Reads { get; private set; } = 0;
+	public bool EndOfStream { get; private set; } = false;
+
+	public void Dispose()
 	{
-		private readonly BinaryReader _reader;
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
 
-		private bool _isDisposed = false;
-
-		public SampleReader(Stream input)
+	protected virtual void Dispose(bool isDisposing)
+	{
+		if (!_isDisposed)
 		{
-			_reader = new BinaryReader(input, Encoding.UTF8, true);
-		}
-
-		public int Reads { get; private set; } = 0;
-		public bool EndOfStream { get; private set; } = false;
-
-		public void Dispose() => Dispose(true);
-
-		protected virtual void Dispose(bool isDisposing)
-		{
-			if (!_isDisposed)
+			if (isDisposing)
 			{
-				if (isDisposing)
-				{
-					_reader.Dispose();
-				}
-
-				_isDisposed = true;
+				_reader.Dispose();
 			}
+
+			_isDisposed = true;
 		}
+	}
 
-		public bool TryRead(out SampleStruct chunk)
+	public bool TryRead(out SampleStruct chunk)
+	{
+		EndOfStream = false;
+
+		try
 		{
-			EndOfStream = false;
+			long elapsed = _reader.ReadInt64();
+			int length = _reader.ReadInt32();
 
-			try
+			if (elapsed >= 0 && length > 0)
 			{
-				long elapsed = _reader.ReadInt64();
-				int length = _reader.ReadInt32();
+				byte[] data = _reader.ReadBytes(length);
 
-				if (elapsed >= 0 && length > 0)
+				if (length == data.Length)
 				{
-					byte[] data = _reader.ReadBytes(length);
-
-					if (length == data.Length)
+					chunk = new SampleStruct
 					{
-						chunk = new SampleStruct
-						{
-							Elapsed = elapsed,
-							Length = length,
-							Data = data
-						};
-						Reads++;
-						return true;
-					}
+						Elapsed = elapsed,
+						Length = length,
+						Data = data
+					};
+					Reads++;
+					return true;
 				}
+			}
 
-				chunk = default;
-				return false;
-			}
-			catch (EndOfStreamException)
-			{
-				EndOfStream = true;
-				chunk = default;
-				return false;
-			}
-			catch (Exception ex)
-			{
-				throw new SampleException("Unexpected sample read error", ex);
-			}
+			chunk = default;
+			return false;
+		}
+		catch (EndOfStreamException)
+		{
+			EndOfStream = true;
+			chunk = default;
+			return false;
+		}
+		catch (Exception ex)
+		{
+			throw new SampleException("Unexpected sample read error", ex);
 		}
 	}
 }

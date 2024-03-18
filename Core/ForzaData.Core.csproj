@@ -2,26 +2,11 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.8</Version>
-		<Authors>Geoffrey Vancoetsem</Authors>
-		<Company></Company>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/geeooff/forza-data-web</RepositoryUrl>
-		<Product>ForzaDataWeb</Product>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<IsPublishable>false</IsPublishable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
+		<None Remove="packages.lock.json" />
 	</ItemGroup>
 
 </Project>
