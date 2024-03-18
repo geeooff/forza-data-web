@@ -1,68 +1,59 @@
 ﻿using ForzaData.Core;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 
-namespace ForzaData.SampleRecorder
+namespace ForzaData.SampleRecorder;
+
+public class UdpStreamSampleRecorder(Stream output) : UdpStreamObserver, IDisposable
 {
-	public class UdpStreamSampleRecorder : UdpStreamObserver, IDisposable
+	private readonly BinaryWriter _writer = new(output, Encoding.UTF8, true);
+	private readonly Stopwatch _stopwatch = new();
+
+	private bool _isDisposed = false;
+
+	public long BytesRead { get; private set; }
+	public long BytesWritten { get; private set; }
+
+	public override void OnCompleted()
 	{
-		private readonly BinaryWriter _writer;
-		private readonly Stopwatch _stopwatch;
+		_writer.Flush();
+	}
 
-		private bool _isDisposed = false;
+	public override void OnError(Exception error)
+	{
+		Debug.WriteLine(error);
+	}
 
-		public UdpStreamSampleRecorder(Stream output)
+	public override void OnNext(byte[] value)
+	{
+		long elapsed = _stopwatch.ElapsedTicks;
+
+		if (!_stopwatch.IsRunning)
 		{
-			_writer = new BinaryWriter(output, Encoding.UTF8, true);
-			_stopwatch = new Stopwatch();
+			_stopwatch.Start();
 		}
 
-		public long BytesRead { get; private set; }
-		public long BytesWritten { get; private set; }
+		_writer.Write(elapsed);			BytesWritten += 8;				// 8 bytes
+		_writer.Write(value.Length);	BytesWritten += 4;				// 4 bytes
+		_writer.Write(value);			BytesWritten += value.Length;	// n bytes
+	}
 
-		public override void OnCompleted()
+	protected virtual void Dispose(bool isDisposing)
+	{
+		if (!_isDisposed)
 		{
-			_writer.Flush();
-		}
-
-		public override void OnError(Exception error)
-		{
-			Debug.WriteLine(error);
-		}
-
-		public override void OnNext(byte[] value)
-		{
-			long elapsed = _stopwatch.ElapsedTicks;
-
-			if (!_stopwatch.IsRunning)
+			if (isDisposing)
 			{
-				_stopwatch.Start();
+				_writer.Dispose();
 			}
 
-			_writer.Write(elapsed);			BytesWritten += 8;				// 8 bytes
-			_writer.Write(value.Length);	BytesWritten += 4;				// 4 bytes
-			_writer.Write(value);			BytesWritten += value.Length;	// n bytes
+			_isDisposed = true;
 		}
+	}
 
-		protected virtual void Dispose(bool isDisposing)
-		{
-			if (!_isDisposed)
-			{
-				if (isDisposing)
-				{
-					_writer.Dispose();
-				}
-
-				_isDisposed = true;
-			}
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-		}
+	public void Dispose()
+	{
+		Dispose(true);
+		GC.SuppressFinalize(this);
 	}
 }

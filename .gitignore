@@ -24,6 +24,9 @@ bld/
 # Visual Studio cache/options directory
 .vs/
 
+# C# Dev Kit
+.mono/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
