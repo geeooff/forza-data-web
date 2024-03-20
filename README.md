@@ -32,8 +32,8 @@ _Car Dash_ extends _Sled data_ with dashboard related metrics, like speed, gear,
 To see all available data fields, please have a look on the data structure files:
 - [Sled structure](Core/ForzaSledDataStruct.cs)
 - [Car Dash structure](Core/ForzaCarDashDataStruct.cs)
-- [Horizon extras structure](Core/ForzaCarDashDataStruct.cs)
-- [Motorsport extras structure](Core/ForzaCarDashDataStruct.cs)
+- [Horizon extras structure](Core/ForzaHorizonExtrasDataStruct.cs)
+- [Motorsport extras structure](Core/ForzaMotorsportExtrasDataStruct.cs)
 
 ### Game Support
 
