@@ -15,6 +15,9 @@ indent_style = space
 indent_size = 2
 tab_width = 2
 
-[*.{cs,csproj,cshtml}]
+[*.{cs,csproj,cshtml,props,sln}]
 indent_style = tab
 charset = utf-8-bom
+
+[*.{md}]
+trim_trailing_whitespace = true

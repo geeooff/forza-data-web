@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: Build
 
 on:
   push:
@@ -35,12 +32,12 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore --use-current-runtime
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --use-current-runtime
     - name: Test
-      run: dotnet test --no-build --verbosity normal --results-directory TestResults --logger html --logger trx
-    - name: Test results upload
+      run: dotnet test --no-build --verbosity normal --logger html --logger trx
+    - name: Test results artifacts
       uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.os }}
-        path: TestResults
+        path: '*/TestResults'
       if: ${{ always() }}

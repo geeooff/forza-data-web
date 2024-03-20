@@ -1,16 +1,28 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit ref'
+        required: true
+        type: string
+        default: 'main'
+      tag:
+        description: 'Tag'
+        required: true
+        type: string
+      desc:
+        description: 'Release descriptin'
+        required: true
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -20,19 +32,31 @@ jobs:
           - windows-latest
           - macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        global-json-file: global.json
-        cache: true
-        cache-dependency-path: '**/packages.lock.json'
-    - name: Restore dependencies
-      run: dotnet restore --use-current-runtime
-    - name: Publish Console
-      run: dotnet publish Console --use-current-runtime --output publish
-    - name: Test results upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: publish-${{ matrix.os }}
-        path: publish
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - name: Restore dependencies
+        run: dotnet restore --use-current-runtime
+      - name: Publish
+        run: dotnet publish --no-restore --use-current-runtime
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ matrix.os }}
+          path: 'artifacts/publish/*/release'
+          retention-days: 1
+          if-no-files-found: error
+
+  # create-release:
+  #   permissions:
+  #     contents: write
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v4
+
