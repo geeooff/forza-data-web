@@ -21,7 +21,6 @@
       "args": [
         "restore",
         "--use-current-runtime",
-        "--force-evaluate",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
