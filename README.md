@@ -1,4 +1,4 @@
-# Forza Data Web (_Work in progress_)
+# Forza Data Web
 
 Forza Motorsport and Horizon Data-Out feature receiver web application, and some debug tools.
 
@@ -51,24 +51,23 @@ To see all available data fields, please have a look on the data structure files
 
 ## How to run
 
-Releases in GitHub are not there yet, but it's really easy to build yourself.
+Supported operating systems are the same as [.NET 8 compatibility](https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md) : Windows, Linux and macOS.
+
+Prebuilt executables are not yet available in GitHub releases, but it's really easy to build the source code yourself.
 
 ### Prerequisites
 
-1. [Git](https://www.git-scm.com/downloads)
-2. [Git LFS](https://git-lfs.github.com)
-3. [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet)
+1. [Git](https://www.git-scm.com/downloads) to get the source code
+2. [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet) to build the source code
 
-### Get sources
-
-Clone (using Git) this repository to your Windows, Mac or Linux computer.
+### How to get source code
 
 ```shell
 git clone https://github.com/geeooff/forza-data-web.git
 cd forza-data-web
 ```
 
-### Enable Data-Out feature in game
+### How to enable Data-Out feature in the game
 
 > **Note for Windows as both game and receiving app**:
 > Only Forza Motorsport (2023) allows to send data to 127.0.0.1.
@@ -81,46 +80,60 @@ Go to game options and look for _Data Out_ options :
 3. `Data Out Packet Format` : choose **Sled** (if available) or **Car Dash**
 4. `Data Out` : set to **ON**
 
-### Run console program
+### How to run the console program
 
-Launch your command line to `Console` source directory.
-Then run this command:
 ```shell
+cd Console
 dotnet run --server <serverIpAddress> --port <port>
 ```
+
+#### Arguments
 
 - `-s` or `--server` : the IP Address of your Xbox or Computer that runs the game
 - `-p` or `--port` : the network port you chose in the game
 
-For example, if your Xbox or Windows Game Computer has 192.168.0.100 IP Address, and you chose 7777 network port to communicate:
+#### Example
+
+For example, if your Xbox or Windows Game Computer has `192.168.0.100` IP Address, and you chose `7777` network port to communicate:
+
 ```shell
 dotnet run --server 192.168.0.100 --port 7777
 ```
 
-The console will show `RACE` or `PAUSE` in the top left corner is race is on or not.
+The console will show `RACE` or `PAUSE` in the top left corner if race is on or not.
 
 ![image](docs/assets/screenshots/console.png)
 
-_Note_ : If you want to quit the console program, just hit `CTRL+C` or `CTRL+Break`.
+_Note_ : To quit the program just hit `CTRL+C` or `CTRL+Break`.
 
-### Record samples
+### How to record a sample
 
-Launch your command line to `SampleRecorder` source directory.
-Then run this command:
 ```shell
+cd SampleRecorder
 dotnet run --server <serverIpAddress> --port <port> --output <file>
 ```
 
-**Arguments**
+#### Arguments
 
 - `-s` or `--server` : the IP Address of your Xbox or Computer that runs the game
 - `-p` or `--port` : the network port you chose in-game
 - `-o` or `--output` : the output file to record to
 
-**Example**
+#### Example
+
 ```shell
 dotnet run --server 192.168.0.100 --port 7777 --output sample.bin
 ```
 
 _Note_ : If you want to quit the recorder program, just hit `CTRL+C` or `CTRL+Break`.
 The output file will be deleted if no data is received.
+
+### Replay a sample (_Work in progress_)
+
+I'm working on replaying samples, both for the console app and the web app.
+
+### Web UI (_Work in progress_)
+
+I will work on the Web UI when core functionalities will be stable.
+
+Web UI should leverage [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API), most probably from [SignalR](https://dotnet.microsoft.com/en-us/apps/aspnet/signalr), to receive live or previously-recorded data at 60 Hz.
