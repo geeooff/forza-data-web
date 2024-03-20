@@ -23,16 +23,35 @@ No Web interface for the moment, only a placeholder razor app.
 
 ## Protocol compatibility
 
-| Game                    | Sled     | Car Dash | Horizon specific | Motorsport specific |
-|-------------------------|----------|----------|------------------|---------------------|
-| Forza Motorsport 7      | Yes      | Yes      | N/A              | N/A                 |
-| Forza Horizon 4         | Yes      | Yes      | Partial *        | N/A                 |
-| Forza Horizon 5         | Yes      | Yes      | Partial *        | N/A                 |
-| Forza Motorsport (2023) | Yes      | Yes      | N/A              | Yes                 |
+### Sled vs Car Dash
 
-_* Forza Horizon specific data is not documented. Only the car category (from community assumptions) is decoded, so thanks to them !_
+_Sled_ data was initially for SimRacing motion platforms, so it has barely more than just movement data.
 
-## How to test
+_Car Dash_ extends _Sled data_ with dashboard related metrics, like speed, gear, accelerator, brake, etc.
+
+To see all available data fields, please have a look on the data structure files:
+- [Sled structure](Core/ForzaSledDataStruct.cs)
+- [Car Dash structure](Core/ForzaCarDashDataStruct.cs)
+- [Horizon extras structure](Core/ForzaCarDashDataStruct.cs)
+- [Motorsport extras structure](Core/ForzaCarDashDataStruct.cs)
+
+### Game Support
+
+| Game                    | Sled     | Car Dash | Horizon extras | Motorsport extras |
+|-------------------------|----------|----------|----------------|-------------------|
+| Forza Motorsport 7      | Yes      | Yes      | N/A            | N/A³              |
+| Forza Horizon 4         | Yes¹     | Yes      | Partial²       | N/A               |
+| Forza Horizon 5         | Yes¹     | Yes      | Partial²       | N/A               |
+| Forza Motorsport (2023) | Yes      | Yes      | N/A            | Yes⁴              |
+
+1. Forza Horizon enforces Car Dash data type
+2. Forza Horizon extra data is not documented. Only the car category (from community assumptions) is decoded. Thanks to them !
+3. Forza Motorsport extra data was introduced in 2023 edition, FM7 doesn't emit such data
+4. Forza Motorsport (2023) extra data exposes tire wear and track ID
+
+## How to run
+
+Releases in GitHub are not there yet, but it's really easy to build yourself.
 
 ### Prerequisites
 
@@ -43,7 +62,11 @@ _* Forza Horizon specific data is not documented. Only the car category (from co
 ### Get sources
 
 Clone (using Git) this repository to your Windows, Mac or Linux computer.
-You will need to install Git LFS before cloning the repository to get large sample files.
+
+```shell
+git clone https://github.com/geeooff/forza-data-web.git
+cd forza-data-web
+```
 
 ### Enable Data-Out feature in game
 
@@ -55,24 +78,28 @@ Start the game on your Windows computer or your Xbox.
 Go to game options and look for _Data Out_ options :
 1. `Data Out IP Address` : enter the IP Address of **the computer that will run the console program**
 2. `Data Out IP Port` : enter the network port you want to **listen on this computer** (1024 to 65535)
-3. `Data Out Packet Format` : choose **Sled** or **Car Dash**. You will get more data using Car Dash, if available.
+3. `Data Out Packet Format` : choose **Sled** (if available) or **Car Dash**
 4. `Data Out` : set to **ON**
 
 ### Run console program
 
 Launch your command line to `Console` source directory.
 Then run this command:
-```
+```shell
 dotnet run --server <serverIpAddress> --port <port>
 ```
 
-- `-s` / `--server` : the IP Address of your Xbox or Computer that runs the game.
-- `-p` / `--port` : the network port you chose in-game
+- `-s` or `--server` : the IP Address of your Xbox or Computer that runs the game
+- `-p` or `--port` : the network port you chose in the game
 
-For example, if your Xbox or Windows Game Computer have 192.168.0.100 IP Address, and you chose 7777 network port to communicate:
-```
+For example, if your Xbox or Windows Game Computer has 192.168.0.100 IP Address, and you chose 7777 network port to communicate:
+```shell
 dotnet run --server 192.168.0.100 --port 7777
 ```
+
+The console will show `RACE` or `PAUSE` in the top left corner is race is on or not.
+
+![image](docs/assets/screenshots/console.png)
 
 _Note_ : If you want to quit the console program, just hit `CTRL+C` or `CTRL+Break`.
 
@@ -80,18 +107,18 @@ _Note_ : If you want to quit the console program, just hit `CTRL+C` or `CTRL+Bre
 
 Launch your command line to `SampleRecorder` source directory.
 Then run this command:
-```
+```shell
 dotnet run --server <serverIpAddress> --port <port> --output <file>
 ```
 
 **Arguments**
 
-- `-s` or `--server` : the IP Address of your Xbox or Computer that runs the game.
+- `-s` or `--server` : the IP Address of your Xbox or Computer that runs the game
 - `-p` or `--port` : the network port you chose in-game
 - `-o` or `--output` : the output file to record to
 
 **Example**
-```
+```shell
 dotnet run --server 192.168.0.100 --port 7777 --output sample.bin
 ```
 
