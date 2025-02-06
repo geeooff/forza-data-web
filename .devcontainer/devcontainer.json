@@ -1,13 +1,15 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
   "name": ".NET 8 SDK",
 
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
+  // .NET SDK version must be aligned with global.json for locked-mode restores to work properly
   "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "8.0.405"
+    },
     "ghcr.io/devcontainers/features/git-lfs:1": {}
   },
 
@@ -53,6 +55,12 @@
         "ms-vscode.hexeditor"
       ]
     }
+  },
+
+  // environment variables
+  "containerEnv": {
+    "DOTNET_NOLOGO": "true",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "true"
   }
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
