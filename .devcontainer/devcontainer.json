@@ -1,0 +1,60 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+  "name": ".NET 8 SDK",
+
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/git-lfs:1": {}
+  },
+
+  // UDP listening port
+  "appPort": "7777:7777/udp",
+
+  // TCP listening ports
+  "forwardPorts": [
+    5000,
+    5001
+  ],
+
+  // The UDP port needs to be forwarded to the devcontainer
+  "portsAttributes": {
+    "5000": {
+      "label": "Web",
+      "protocol": "http"
+    },
+    "5001": {
+      "label": "Web",
+      "protocol": "https"
+    },
+    "7777": {
+      "label": "UDP Listening Port"
+    }
+  },
+
+  "onCreateCommand": "sudo dotnet workload update",
+  "postCreateCommand": "dotnet restore",
+  
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "redhat.vscode-yaml",
+        "redhat.vscode-xml",
+        "ms-dotnettools.vscodeintellicode-csharp",
+        "EditorConfig.EditorConfig",
+        "yzhang.markdown-all-in-one",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "ms-vscode.hexeditor"
+      ]
+    }
+  }
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
