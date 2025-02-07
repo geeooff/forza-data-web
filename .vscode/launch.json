@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "console",
+      "name": "console (external)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
@@ -14,6 +14,20 @@
       ],
       "cwd": "${workspaceFolder}/Console",
       "console": "externalTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "console (integrated)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/artifacts/bin/ForzaData.Console/debug/forzadata-console.dll",
+      "args": [
+        "--server", "${input:serverIpAddress}",
+        "--port", "${input:clientPortNumber}"
+      ],
+      "cwd": "${workspaceFolder}/Console",
+      "console": "integratedTerminal",
       "stopAtEntry": false
     }
   ],
