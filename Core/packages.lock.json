@@ -23,8 +23,11 @@
         "contentHash": "fGLiCRLMYd00JYpClraLjJTNKLmMJPnqxMaiRzEBIIvevlzxz33mXy39Lkd48hu1G+N21S7QpaO5ZzKsI6FRuA=="
       }
     },
+    "net8.0/linux-arm64": {},
     "net8.0/linux-x64": {},
+    "net8.0/osx-arm64": {},
     "net8.0/osx-x64": {},
+    "net8.0/win-arm64": {},
     "net8.0/win-x64": {}
   }
 }
