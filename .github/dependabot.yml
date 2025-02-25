@@ -23,3 +23,17 @@ updates:
       - dependency-name: "*"
         update-types:
           - "version-update:semver-major"
+    groups:
+      mstest:
+        applies-to: version-updates
+        patterns:
+          - "Microsoft.NET.Test.Sdk"
+          - "Microsoft.CodeCoverage"
+          - "Microsoft.Testing.*"
+          - "Microsoft.TestPlatform.*"
+          - "MSTest.*"
+      spectre:
+        applies-to: version-updates
+        patterns:
+          - "Spectre.Console"
+          - "Spectre.Console.*"
