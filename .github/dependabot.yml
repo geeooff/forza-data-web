@@ -18,4 +18,8 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: weekly
+      interval: daily
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
