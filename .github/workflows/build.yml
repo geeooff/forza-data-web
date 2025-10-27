@@ -36,7 +36,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger html --logger trx
     - name: Test results artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: test-results-${{ matrix.os }}
         path: '*/TestResults'
