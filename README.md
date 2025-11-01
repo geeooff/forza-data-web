@@ -66,7 +66,7 @@ cd forza-data-web
 
 > **Note for Windows as both game and receiving app**:
 > Only Forza Motorsport (2023) allows to send data to 127.0.0.1.
-> For earlier games you will need a separate compute to receive the data.
+> For earlier games you will need a separate computer to receive the data.
 
 Start the game on your Windows computer or your Xbox.
 Go to game options and look for _Data Out_ options :
