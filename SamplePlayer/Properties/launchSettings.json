@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ForzaData.SamplePlayer": {
+      "commandName": "Project",
+      "commandLineArgs": "--input ..\\..\\..\\Samples\\FH4_Race_Winter_2019-04-25_Xbox_TS-fix.bin --output-ip 127.0.0.1 --output-port 7777 --speed 1.0"
+    }
+  }
+}
